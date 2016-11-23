@@ -1,6 +1,8 @@
 <ion-view view-title="Dashboard">
   <ion-content class="padding">
 
+  <button class="button button-royal button-rounded" ng-click="synchronizeTimer()">Synchronize timer</button>
+
     <!-- Timer style -->
     <div class="progress-wrapper">
       <div class="progress">
@@ -8,6 +10,15 @@
       </div>
       <round-progress max="timeForTimer" current="timer" clockwise="false" color="#45ccce" class="text-center"></round-progress>
     </div>
+
+    <!--<ion-list>
+        <div class="item item-icon-left" ion-datetime-picker time seconds ng-model="timeForTimer">
+          <i class="icon ion-ios-time positive"></i>
+          Choose time
+          <strong>{{datetimeValue| date: "H:mm:ss"}}</strong>
+        </div>
+    </ion-list>-->
+
 
     <!-- Handles start button -->
     <div ng-if="!started && !paused && !done">

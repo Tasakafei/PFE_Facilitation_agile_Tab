@@ -31,10 +31,24 @@
 
     <!-- your app's js -->
     <script src="js/app.js"></script>
+    <script src="js/services/socketio.service.js"></script>
+    <script src="js/components/timerController.js"></script>
+
     <script src="js/controllers.js"></script>
     <script src="js/services.js"></script>
+
+    <!-- Moment (for timer) --> 
+    <script src="lib/moment/moment.min.js"></script>
+    <!-- rounded progrssbar for timer on player -->
+    <script src="lib/angular-svg-round-progressbar/roundProgress.min.js"></script>
+
+    <script src="lib/ion-datetime-picker/release/ion-datetime-picker.min.js"></script>
+    <link href="lib/ion-datetime-picker/release/ion-datetime-picker.min.css" rel="stylesheet">
+
+    <script src="lib/socket.io.min.js"></script>
+
   </head>
-  <body ng-app="starter">
+  <body ng-app="facilitation">
     <!--
       The nav bar that will be updated as we navigate between views.
     -->
