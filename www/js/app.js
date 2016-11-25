@@ -10,11 +10,6 @@ angular.module('facilitation', ['ionic', 'socketio.service', 'facilitation.start
 .run(function($ionicPlatform, socket) {
   $ionicPlatform.ready(function() {
 
-    // TODO : for testing only, to remove
-    socket.on('test_com', function(message) {
-        alert(message);
-    });
-
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
     if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {

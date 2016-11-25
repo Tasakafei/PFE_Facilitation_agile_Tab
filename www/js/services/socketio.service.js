@@ -1,7 +1,13 @@
 // AngularJS socket.io wrapper
 var app = angular.module('socketio.service', []);
-app.service('socket', function ($rootScope) {
-    var socket = io.connect("https://pfe-facilitation.herokuapp.com");
+app.service('socket', function ($rootScope, $http) {
+     var socket;
+    $http.get('connection.properties').then(function (response) {
+        var socketioURL = response.data.socketioURL;
+        socket = io.connect(socketioURL);
+    });
+    //var socket = io.connect("https://pfe-facilitation.herokuapp.com");
+    //var socket = io.connect("http://localhost:3000");
 
     this.on = function (eventName, callback) {
         socket.on(eventName, function () {
