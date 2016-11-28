@@ -1,5 +1,24 @@
 <ion-view view-title="{{workshop.title}}">
     <ion-content class="padding">
         <img src="{{workshop.photo}}">
+        <div class="progress-wrapper">
+            <div class="progress">
+                {{humanizeDurationTimer(timer,'s')}}
+            </div>
+            <round-progress max="timeForTimer" current="timer" clockwise="false" color="#45ccce" class="text-center"></round-progress>
+        </div>
+
+
+        <div ng-if="!timerIsSync && !workshopRunning">
+            <button class="button button-positive button-rounded button-block" ng-click='synchronizeTimer()'>
+                Connect your workshop
+            </button>
+        </div>
+        <div ng-if="timerIsSync && !workshopRunning">
+            <button class="button button-balanced button-rounded button-block" ng-click='startWorkshop()'>
+                Start workshop
+            </button>
+        </div>
+
     </ion-content>
 </ion-view>
