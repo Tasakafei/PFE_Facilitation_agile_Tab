@@ -51,34 +51,6 @@ angular.module('facilitation', ['ionic', 'socketio.service', 'facilitation.start
     }
   })
 
-  .state('tab.chats', {
-      url: '/chats',
-      views: {
-        'tab-chats': {
-          templateUrl: 'templates/tab-chats.html',
-          controller: 'ChatsCtrl'
-        }
-      }
-    })
-    .state('tab.chat-detail', {
-      url: '/chats/:chatId',
-      views: {
-        'tab-chats': {
-          templateUrl: 'templates/chat-detail.html',
-          controller: 'ChatDetailCtrl'
-        }
-      }
-    })
-
-  .state('tab.account', {
-    url: '/account',
-    views: {
-      'tab-account': {
-        templateUrl: 'templates/tab-account.html',
-        controller: 'AccountCtrl'
-      }
-    }
-  })
 
   .state('tab.timer', {
     url: '/timer',
@@ -88,9 +60,29 @@ angular.module('facilitation', ['ionic', 'socketio.service', 'facilitation.start
         controller: 'TimerCtrl'
       }
     }
+  })
+
+  .state('tab.workshopList', {
+    url: '/workshops',
+    views: {
+      'tab-workshop': {
+        templateUrl: 'templates/workshopList.html',
+        controller: 'WorkshopListCtrl'
+      }
+    }
+  })
+
+  .state('tab.workshop', {
+    url: '/workshops/:workshopId',
+    views: {
+      'tab-workshop': {
+        templateUrl: 'templates/workshop.html',
+        controller: 'WorkshopCtrl'
+      }
+    }
   });
 
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/tab/dash');
+  $urlRouterProvider.otherwise('/tab/timer');
 
 });

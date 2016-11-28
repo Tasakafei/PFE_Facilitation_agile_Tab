@@ -1,0 +1,11 @@
+<ion-view view-title="Workshops">
+    <ion-content class="padding">
+        <h3>Vos ateliers choisis</h3>
+        <div ng-repeat="workshop in workshops.data">
+            <a href="#/tab/workshops/{{workshop._id}}">
+                <img src="{{workshop.photo}}">
+                <p>{{workshop.title}}</p>
+            </a>
+        </div>
+    </ion-content>
+</ion-view>
