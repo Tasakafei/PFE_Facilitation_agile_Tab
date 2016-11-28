@@ -1,6 +1,6 @@
 {
-  "name": "My Ionic App",
-  "short_name": "My Ionic App",
+  "name": "pfe_tablette_v1",
+  "short_name": "pfe_tablette_v1",
   "start_url": "index.html",
   "display": "standalone",
   "icons": [{
