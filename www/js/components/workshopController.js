@@ -18,7 +18,7 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, socket, TimerServi
 
     // Used to join the wanted room
     $scope.synchronizeTimer = function(){
-        socket.emit('join_room', $scope.roomId);
+        socket.emit('join_room', $scope.workshop._id);
     };
 
     $scope.startWorkshop = function () {
