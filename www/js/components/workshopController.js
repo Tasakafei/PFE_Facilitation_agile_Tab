@@ -20,15 +20,15 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $interval, socket,
     WorkshopsProvider.getWorkshopById($stateParams.workshopId, function (workshopResult) {
         $scope.workshop = workshopResult.data;
 
-        $scope.workshopSteps = filterWorkshopSteps(workshopResult.data); //[10,20,10]; // mocked
+        $scope.workshopSteps = filterWorkshopSteps(workshopResult.data).filter(function (duration) {return duration > -1;}); //[10,20,10]; // mocked
         $scope.roundNum = 0; // first iteration
         $scope.initializeTimer($scope.workshopSteps[$scope.roundNum]);
     });
 
     function filterWorkshopSteps(workshop){
         return workshop.steps.map(function (step) {
-            if(step.duration != undefined && step.duration.theorical != undefined) return step.duration.theorical * 60;
-            else return 0;
+            if(step.duration != undefined && step.duration.theorical != undefined) return step.duration.theorical;
+            else return -1;
         });
     };
 
