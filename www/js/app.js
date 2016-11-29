@@ -50,7 +50,7 @@ angular.module('facilitation', ['ionic', 'socketio.service', 'facilitation.start
       }
     }
   })
-
+/*
   .state('tab.timer', {
     url: '/timer',
     views: {
@@ -59,7 +59,7 @@ angular.module('facilitation', ['ionic', 'socketio.service', 'facilitation.start
         controller: 'TimerCtrl'
       }
     }
-  })
+  })*/
 
   .state('tab.workshopList', {
     url: '/workshops',
@@ -82,6 +82,6 @@ angular.module('facilitation', ['ionic', 'socketio.service', 'facilitation.start
   });
 
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/tab/timer');
+  $urlRouterProvider.otherwise('/tab/workshops');
 
 });

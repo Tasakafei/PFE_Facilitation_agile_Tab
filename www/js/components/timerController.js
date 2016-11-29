@@ -1,7 +1,8 @@
 angular.module('facilitation.timer', ['ionic','angular-svg-round-progress', 'ion-datetime-picker', 'socketio.service'])
 
 .controller('TimerCtrl', function($scope, socket, TimerService) {
-    
+
+    /* TODO NOT USED ANYMORE
     // Timer
     var timerIsSync = null;
 
@@ -63,5 +64,5 @@ angular.module('facilitation.timer', ['ionic','angular-svg-round-progress', 'ion
     // This function helps to display the time in a correct way in the center of the timer
     $scope.humanizeDurationTimer = function(input, units) {
         return TimerService.humanizeDurationTimer(input, units);
-    };
+    };*/
 });

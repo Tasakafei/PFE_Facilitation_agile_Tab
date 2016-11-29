@@ -1,6 +1,6 @@
 var app = angular.module('facilitation');
 
-app.service('TimerService', function ($rootScope, $timeout) {
+app.service('TimerService', function ($rootScope, $timeout, $interval) {
     var mytimeout = null;
 
     // initialize the timer for time value and workshop id (for socket.io)
@@ -71,5 +71,50 @@ app.service('TimerService', function ($rootScope, $timeout) {
             $rootScope.timer--;
         }
         mytimeout = $timeout(onTimeout, 1000);
+    };
+
+
+
+    /********************** OTHER VERSION ***********************/
+    var timer, ispaused = false;
+    this.startTimerV2 = function (timeAmount) {
+        ispaused = false;
+        if(angular.isDefined(timer)) return;
+        $rootScope.countDown = timeAmount;
+        $rootScope.lastTimeAmount = timeAmount;
+        runTimer();
+    };
+
+    this.pauseTimerV2 = function () {
+        ispaused = true;
+        stopTimer();
+    };
+
+    this.resumeTimerV2 = function(){
+        if(!ispaused) return;
+        ispaused = false;
+        runTimer();
+    };
+
+    this.resetTimerV2 = function(){
+        ispaused = false
+        stopTimer();
+        $rootScope.countDown = $rootScope.lastTimeAmount;
+        $rootScope.$apply();
+    };
+
+    function runTimer(){
+        timer = $interval(function(){
+            $rootScope.countDown--;
+            if($rootScope.countDown == 0) stopTimer();
+            $rootScope.$apply();
+        }, 1000);
+    };
+
+    function stopTimer() {
+        if (angular.isDefined(timer)) {
+            $interval.cancel(timer);
+            timer = undefined;
+        }
     };
 });
