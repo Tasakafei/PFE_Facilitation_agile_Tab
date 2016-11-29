@@ -1,4 +1,4 @@
-angular.module('facilitation.timer', ['ionic','angular-svg-round-progress', 'ion-datetime-picker', 'socketio.service'])
+angular.module('facilitation.timer', ['ionic','angular-svg-round-progress', 'socketio.service'])
 
 .controller('TimerCtrl', function($scope, socket, TimerService) {
 

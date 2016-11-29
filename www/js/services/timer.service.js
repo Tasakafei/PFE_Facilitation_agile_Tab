@@ -1,7 +1,7 @@
 var app = angular.module('facilitation');
 
 app.service('TimerService', function ($rootScope, $timeout, $interval) {
-    var mytimeout = null;
+    /*$rootScope.mytimeout = null;
 
     // initialize the timer for time value and workshop id (for socket.io)
     this.initializeTimer = function(val) {
@@ -14,7 +14,7 @@ app.service('TimerService', function ($rootScope, $timeout, $interval) {
 
     // starts the timer
     this.startTimer = function(){
-        mytimeout = $timeout(onTimeout, 1000);
+        $rootScope.mytimeout = $timeout(onTimeout, 1000);
         $rootScope.started = true;
     };
 
@@ -24,15 +24,15 @@ app.service('TimerService', function ($rootScope, $timeout, $interval) {
         $rootScope.started = false;
         $rootScope.paused = false;
         $rootScope.done = false;
-        $timeout.cancel(mytimeout);
+        $timeout.cancel($rootScope.mytimeout);
     };
 
     // pauses the timer
     this.pauseTimer = function(){
         $rootScope.started = false;
         $rootScope.paused = true;
-        $timeout.cancel(mytimeout);
-    };
+        $timeout.cancel($rootScope.mytimeout);
+    };*/
 
     // This function helps to display the time in a correct way in the center of the timer
     this.humanizeDurationTimer = function(input, units) {
@@ -63,20 +63,20 @@ app.service('TimerService', function ($rootScope, $timeout, $interval) {
     });*/
 
     // actual timer method, counts down every second, stops on zero
-    function onTimeout() {
+    /*function onTimeout() {
         if ($rootScope.timer === 0) {
             $rootScope.$broadcast('timer-stopped', 0);
-            $timeout.cancel(mytimeout);
+            $timeout.cancel($rootScope.mytimeout);
         } else {
             $rootScope.timer--;
         }
-        mytimeout = $timeout(onTimeout, 1000);
-    };
+        $rootScope.mytimeout = $timeout(onTimeout, 1000);
+    };*/
 
 
 
     /********************** OTHER VERSION ***********************/
-    var timer, ispaused = false;
+    /*var timer, ispaused = false;
     this.startTimerV2 = function (timeAmount) {
         ispaused = false;
         if(angular.isDefined(timer)) return;
@@ -116,5 +116,5 @@ app.service('TimerService', function ($rootScope, $timeout, $interval) {
             $interval.cancel(timer);
             timer = undefined;
         }
-    };
+    };*/
 });

@@ -5,7 +5,13 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('facilitation', ['ionic', 'socketio.service', 'facilitation.startersCtrl', 'facilitation.startersServices', 'facilitation.timer'])
+angular.module('facilitation',
+    [
+      'ionic',
+      'socketio.service',
+      'facilitation.startersCtrl',
+      'angular-svg-round-progress'
+    ])
 
 .run(function($ionicPlatform, socket) {
   $ionicPlatform.ready(function() {
