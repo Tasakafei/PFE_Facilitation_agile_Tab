@@ -8,13 +8,19 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, socket, TimerServi
     $scope.workshopRunning = false;
 
     WorkshopsProvider.getWorkshopById($stateParams.workshopId, function (workshopResult) {
-        $scope.workshop = workshopResult;
+        $scope.workshop = workshopResult.data;
 
-        $scope.workshopSteps = [10,20,10]; // mocked
+        $scope.workshopSteps = filterWorkshopSteps(workshopResult.data); //[10,20,10]; // mocked
         $scope.roundNum = 0; // first iteration
         TimerService.initializeTimer($scope.workshopSteps[$scope.roundNum]);
     });
 
+    function filterWorkshopSteps(workshop){
+        return workshop.steps.map(function (step) {
+            if(step.duration != undefined && step.duration.theorical != undefined) return step.duration.theorical * 60;
+            else return 0;
+        });
+    };
 
     // Used to join the wanted room
     $scope.synchronizeTimer = function(){
@@ -37,44 +43,6 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, socket, TimerServi
         // TODO : testing only, to remove
         alert(msg);
     });
-
-    // initialize the timer for time value and workshop id (for socket.io)
-    /*$scope.initializeTimer = function(val, workshop) {
-        TimerService.initializeTimer(val);
-        $scope.roomId = workshop;
-    };*/
-
-    // TODO : remove hardcoded time
-    //$scope.initializeTimer(3, "roomTest");
-
-    // wrap the start function for syncing
-    /*$scope.startSyncTimer = function() {
-        if(timerIsSync) {
-            var timerInfo = {"workshop":$scope.roomId,"duration":$scope.timeForTimer};
-            socket.emit('launch_timer', timerInfo);
-            TimerService.startTimer();
-        } else {
-            alert("Sync please !");
-        }
-    };
-
-    // wrap the resume function for syncing
-    $scope.resumeSyncTimer = function() {
-        socket.emit('resume_timer', $scope.roomId);
-        TimerService.startTimer();
-    };
-
-    // wrap the stop and reset function for syncing
-    $scope.stopSyncTimer = function(closingModal) {
-        socket.emit('stop_timer', $scope.roomId);
-        TimerService.stopTimer(closingModal);
-    };
-
-    // wrap the pause function for syncing
-    $scope.pauseSyncTimer = function() {
-        socket.emit('pause_timer', $scope.roomId);
-        TimerService.pauseTimer();
-    };*/
 
     $scope.$on('timer-stopped', function(event, remaining) {
         if (remaining === 0) {

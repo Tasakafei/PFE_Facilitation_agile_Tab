@@ -3,7 +3,7 @@ var app = angular.module('socketio.service', []);
 app.service('socket', function ($rootScope, $http) {
      var socket;
     $http.get('connection.properties').then(function (response) {
-        var socketioURL = response.data.socketioURL;
+        var socketioURL = response.data.serverURL;
         socket = io.connect(socketioURL);
     });
     //var socket = io.connect("https://pfe-facilitation.herokuapp.com");
