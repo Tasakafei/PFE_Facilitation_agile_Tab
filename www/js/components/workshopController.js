@@ -2,13 +2,14 @@
 
 var app = angular.module('facilitation');
 
-app.controller('WorkshopCtrl', function($scope, $stateParams, $interval, socket, TimerService, WorkshopsProvider) {
+app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $interval, socket, TimerService, WorkshopsProvider) {
     $scope.workshop = {};
     $scope.timerIsSync = null;
     $scope.workshopRunning = false;
 
     var timerInterval, ispaused = false;
 
+    // Initialize the values for the timer
     $scope.initializeTimer = function (val) {
         $scope.timeForTimer = val;
         $scope.timer = val;
@@ -17,6 +18,7 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $interval, socket,
         $scope.done = false;
     };
 
+    // Automatically retrieve the workshop instance when arriving in this controller
     WorkshopsProvider.getWorkshopById($stateParams.workshopId, function (workshopResult) {
         $scope.workshop = workshopResult.data;
 
@@ -25,6 +27,7 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $interval, socket,
         $scope.initializeTimer($scope.workshopSteps[$scope.roundNum]);
     });
 
+    // Filter the steps to retrieve only the durations
     function filterWorkshopSteps(workshop){
         return workshop.steps.map(function (step) {
             if(step.duration != undefined && step.duration.theorical != undefined) return step.duration.theorical;
@@ -32,19 +35,27 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $interval, socket,
         });
     };
 
-    // Used to join the wanted room
+    // Used to join the wanted instance
     $scope.synchronizeTimer = function(){
         console.log("Join room : "+$scope.workshop._id);
         socket.emit('join_room', $scope.workshop._id);
     };
 
+    // Ensure that the timer is synchronized
+    socket.on('join_success', function(msg){
+        $scope.timerIsSync = true;
+        $ionicLoading.show({ template: msg, noBackdrop: true, duration: 2000 });
+    });
+
+    // Used to leave the instance when destroying (leaving) this controller
     $scope.$on("$destroy", function(){
         console.log("Leave room : "+$scope.workshop._id);
         socket.emit('leave_room', $scope.workshop._id);
     });
 
-    // TODO : MOVE TO SERVICE
+    // TODO : MOVE TO SERVICE ?
 
+    // Launch the instance
     $scope.startWorkshop = function () {
         if($scope.timerIsSync) {
             var timerInfo = {"workshop":$scope.workshop._id,"duration":$scope.timeForTimer};
@@ -55,27 +66,6 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $interval, socket,
             alert("Sync please !");
         }
     };
-
-    socket.on('new_user', function(msg){
-        $scope.timerIsSync = true;
-        // TODO : testing only, to remove
-        //alert(msg);
-    });
-
-    $scope.$on('timer-stopped', function(event, remaining) {
-        if (remaining === 0) {
-            $scope.roundNum++;
-            if($scope.roundNum < $scope.workshopSteps.length){
-                $scope.initializeTimer($scope.workshopSteps[$scope.roundNum]);
-                $scope.startWorkshop();
-            } else {
-                $scope.done = true;
-                stopTimer();
-            }
-        }
-    });
-
-
 
     $scope.startTimer = function () {
         ispaused = false;
@@ -104,16 +94,13 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $interval, socket,
         $scope.started = false;
         $scope.paused = false;
         $scope.done = false;
-        //$scope.$apply();
     };
-
 
     function runTimer(){
         timerInterval = $interval(function(){
             $scope.timer--;
             // TODO : Check if that fix is not totally shitty
             if($scope.timer == -1) stopTimer();
-            //$scope.$apply();
         }, 1000);
     };
 

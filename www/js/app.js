@@ -56,16 +56,6 @@ angular.module('facilitation',
       }
     }
   })
-/*
-  .state('tab.timer', {
-    url: '/timer',
-    views: {
-      'tab-timer': {
-        templateUrl: 'templates/tab-timer.html',
-        controller: 'TimerCtrl'
-      }
-    }
-  })*/
 
   .state('tab.workshopList', {
     url: '/workshops',
