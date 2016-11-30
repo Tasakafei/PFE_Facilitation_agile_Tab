@@ -32,12 +32,18 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $interval, socket,
         });
     };
 
-    // TODO : MOVE TO SERVICE
-
     // Used to join the wanted room
     $scope.synchronizeTimer = function(){
+        console.log("Join room : "+$scope.workshop._id);
         socket.emit('join_room', $scope.workshop._id);
     };
+
+    $scope.$on("$destroy", function(){
+        console.log("Leave room : "+$scope.workshop._id);
+        socket.emit('leave_room', $scope.workshop._id);
+    });
+
+    // TODO : MOVE TO SERVICE
 
     $scope.startWorkshop = function () {
         if($scope.timerIsSync) {
@@ -53,7 +59,7 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $interval, socket,
     socket.on('new_user', function(msg){
         $scope.timerIsSync = true;
         // TODO : testing only, to remove
-        alert(msg);
+        //alert(msg);
     });
 
     $scope.$on('timer-stopped', function(event, remaining) {
