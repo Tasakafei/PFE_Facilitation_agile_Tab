@@ -18,13 +18,13 @@ angular.module('facilitation.timer', ['ionic','angular-svg-round-progress', 'soc
     });
 
     // initialize the timer for time value and workshop id (for socket.io)
-    $scope.initializeTimer = function(val, workshop) {
-        TimerService.initializeTimer(val);
+    $scope.initializeIterationTimer = function(val, workshop) {
+        TimerService.initializeIterationTimer(val);
         $scope.roomId = workshop;
     };
 
     // TODO : remove hardcoded time
-    $scope.initializeTimer(3, "roomTest");
+    $scope.initializeIterationTimer(3, "roomTest");
 
     // wrap the start function for syncing
     $scope.startSyncTimer = function() {

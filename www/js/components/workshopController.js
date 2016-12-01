@@ -6,26 +6,22 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
     $scope.workshop = {};
     $scope.timerIsSync = null;
     $scope.iterationRunning = false;
+    $scope.workshopRunning = false;
+    $scope.isLate = false;
 
 
-    var timerInterval, ispaused = false;
+    var timerInterval, globalTimerInterval, ispaused = false;
 
-    // Initialize the values for the timer (plugin dependent)
-    $scope.initializeTimer = function (val) {
-        $scope.timeForTimer = val;
-        $scope.timer = val;
-        $scope.started = false;
-        $scope.paused = false;
-        $scope.done = false;
-    };
 
     // Automatically retrieve the workshop instance when arriving in this controller
     WorkshopsProvider.getWorkshopById($stateParams.workshopId, function (workshopResult) {
         $scope.workshop = workshopResult.data;
 
         $scope.workshopSteps = filterWorkshopSteps(workshopResult.data).filter(function (duration) {return duration > -1;}); //[10,20,10]; // mocked
+        $scope.overallTime = $scope.workshopSteps.reduce(function (a, b) {return a+b;});
         $scope.roundNum = 0; // first iteration
-        $scope.initializeTimer($scope.workshopSteps[$scope.roundNum]);
+        initializeIterationTimer($scope.workshopSteps[$scope.roundNum]);
+        initializeGlobalTimer($scope.overallTime);
     });
 
     // Filter the steps to retrieve only the durations
@@ -52,16 +48,40 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
     $scope.$on("$destroy", function(){
         console.log("Leave room : "+$scope.workshop._id);
         socket.emit('leave_room', $scope.workshop._id);
+        if (angular.isDefined(globalTimerInterval)) {
+            $interval.cancel(globalTimerInterval);
+            globalTimerInterval = undefined;
+        }
+        stopIterationTimer();
     });
 
     // TODO : MOVE TO SERVICE ?
 
+    // Initialize the values for the iteration timer (plugin dependent)
+    function initializeIterationTimer(val) {
+        $scope.timeForTimer = val;
+        $scope.timer = val;
+        $scope.started = false;
+        $scope.paused = false;
+        $scope.done = false;
+    };
+
+    // Initialize the value(s) for the global timer
+    function initializeGlobalTimer(val) {
+        $scope.globalTimer = val;
+        $scope.isLate = false;
+    }
+
     // Launch the instance
-    $scope.startWorkshop = function () {
+    $scope.startIteration = function () {
         if($scope.timerIsSync) {
             var timerInfo = {"workshop":$scope.workshop._id,"duration":$scope.timeForTimer};
             socket.emit('launch_timer', timerInfo);
             $scope.startTimer();
+            if($scope.workshopRunning == false) {
+                runGlobalTimer();
+                $scope.workshopRunning = true;
+            }
             $scope.iterationRunning = true;
         } else {
             alert("Sync please !");
@@ -72,53 +92,77 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
         ispaused = false;
         $scope.started = true;
         if(angular.isDefined(timerInterval)) return;
-        runTimer();
+        runIterationTimer();
     };
 
     $scope.pauseTimer = function () {
         ispaused = true;
         $scope.started = false;
         $scope.paused = true;
-        stopTimer();
+        stopIterationTimer();
     };
 
     $scope.resumeTimer = function(){
         if(!ispaused) return;
         ispaused = false;
-        runTimer();
+        runIterationTimer();
     };
 
     $scope.resetTimer = function(){
         ispaused = false;
-        stopTimer();
+        stopIterationTimer();
         $scope.timer = $scope.timeForTimer;
         $scope.started = false;
         $scope.paused = false;
         $scope.done = false;
     };
 
-    function runTimer(){
+    function runIterationTimer(){
         timerInterval = $interval(function(){
             $scope.timer--;
             // TODO : Check if that fix is not totally shitty
-            if($scope.timer == -1) stopTimer();
+            if($scope.timer == -1) stopIterationTimer();
         }, 1000);
     };
 
-    function stopTimer() {
+    function stopIterationTimer() {
         if (angular.isDefined(timerInterval)) {
             $interval.cancel(timerInterval);
             timerInterval = undefined;
             $scope.roundNum++;
             if($scope.roundNum < $scope.workshopSteps.length){
-                $scope.initializeTimer($scope.workshopSteps[$scope.roundNum]);
+                initializeIterationTimer($scope.workshopSteps[$scope.roundNum]);
                 $scope.iterationRunning = false;
             } else {
                 $scope.done = true;
-                $scope.initializeTimer(0);
+                stopGlobalTimer();
+                initializeIterationTimer(0);
             }
         }
     };
+
+    function runGlobalTimer() {
+        globalTimerInterval = $interval(function(){
+            if($scope.isLate){
+                $scope.globalTimer++;
+            } else {
+                $scope.globalTimer--;
+                if($scope.globalTimer == -1) {
+                    $scope.isLate = true;
+                    $scope.globalTimer = 1;
+                }
+            }
+
+
+        }, 1000);
+    }
+
+    function stopGlobalTimer() {
+        if (angular.isDefined(globalTimerInterval)) {
+            $interval.cancel(globalTimerInterval);
+            globalTimerInterval = undefined;
+        }
+    }
 
     // This function helps to display the time in a correct way in the center of the timer
     $scope.humanizeDurationTimer = function(input, units) {

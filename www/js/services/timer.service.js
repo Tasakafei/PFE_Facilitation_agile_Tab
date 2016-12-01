@@ -4,7 +4,7 @@ app.service('TimerService', function ($rootScope, $timeout, $interval) {
     /*$rootScope.mytimeout = null;
 
     // initialize the timer for time value and workshop id (for socket.io)
-    this.initializeTimer = function(val) {
+    this.initializeIterationTimer = function(val) {
         $rootScope.timeForTimer = val;
         $rootScope.timer = val;
         $rootScope.started = false;

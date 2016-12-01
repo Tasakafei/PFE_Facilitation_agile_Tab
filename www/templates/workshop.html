@@ -1,6 +1,15 @@
 <ion-view view-title="{{workshop.title}}">
     <ion-content class="padding">
-        <img src="{{workshop.photo}}">
+
+        <div>
+            <h3>Global Timer</h3>
+            <div ng-if="!isLate">{{humanizeDurationTimer(globalTimer,'s')}}</div>
+            <div ng-if="isLate">
+                <span>{{humanizeDurationTimer(overallTime,'s')}} </span>
+                <span style="color: red;">+ {{humanizeDurationTimer(globalTimer,'s')}}</span>
+            </div>
+        </div>
+
         <div class="progress-wrapper">
             <div class="progress">
                 {{humanizeDurationTimer(timer,'s')}}
@@ -15,7 +24,7 @@
             </button>
         </div>
         <div ng-if="timerIsSync && !iterationRunning">
-            <button class="button button-balanced button-rounded button-block" ng-click='startWorkshop()'>
+            <button class="button button-balanced button-rounded button-block" ng-click="startIteration()">
                 Start workshop
             </button>
         </div>
