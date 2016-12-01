@@ -9,12 +9,12 @@
         </div>
 
 
-        <div ng-if="!timerIsSync && !workshopRunning">
+        <div ng-if="!timerIsSync && !iterationRunning">
             <button class="button button-positive button-rounded button-block" ng-click='synchronizeTimer()'>
                 Connect your workshop
             </button>
         </div>
-        <div ng-if="timerIsSync && !workshopRunning">
+        <div ng-if="timerIsSync && !iterationRunning">
             <button class="button button-balanced button-rounded button-block" ng-click='startWorkshop()'>
                 Start workshop
             </button>

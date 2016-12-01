@@ -5,11 +5,12 @@ var app = angular.module('facilitation');
 app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $interval, socket, TimerService, WorkshopsProvider) {
     $scope.workshop = {};
     $scope.timerIsSync = null;
-    $scope.workshopRunning = false;
+    $scope.iterationRunning = false;
+
 
     var timerInterval, ispaused = false;
 
-    // Initialize the values for the timer
+    // Initialize the values for the timer (plugin dependent)
     $scope.initializeTimer = function (val) {
         $scope.timeForTimer = val;
         $scope.timer = val;
@@ -61,7 +62,7 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
             var timerInfo = {"workshop":$scope.workshop._id,"duration":$scope.timeForTimer};
             socket.emit('launch_timer', timerInfo);
             $scope.startTimer();
-            $scope.workshopRunning = true;
+            $scope.iterationRunning = true;
         } else {
             alert("Sync please !");
         }
@@ -111,7 +112,7 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
             $scope.roundNum++;
             if($scope.roundNum < $scope.workshopSteps.length){
                 $scope.initializeTimer($scope.workshopSteps[$scope.roundNum]);
-                $scope.startWorkshop();
+                $scope.iterationRunning = false;
             } else {
                 $scope.done = true;
                 $scope.initializeTimer(0);
