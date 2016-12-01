@@ -7,6 +7,7 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
     $scope.timerIsSync = null;
     $scope.iterationRunning = false;
     $scope.workshopRunning = false;
+    $scope.doneWorkshop = false;
     $scope.isLate = false;
 
 
@@ -48,11 +49,7 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
     $scope.$on("$destroy", function(){
         console.log("Leave room : "+$scope.workshop._id);
         socket.emit('leave_room', $scope.workshop._id);
-        if (angular.isDefined(globalTimerInterval)) {
-            $interval.cancel(globalTimerInterval);
-            globalTimerInterval = undefined;
-        }
-        stopIterationTimer();
+        endOfWorkshop();
     });
 
     // TODO : MOVE TO SERVICE ?
@@ -70,6 +67,14 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
     function initializeGlobalTimer(val) {
         $scope.globalTimer = val;
         $scope.isLate = false;
+    }
+
+    function endOfWorkshop() {
+        $scope.doneWorkshop = true;
+        $scope.workshopRunning = false;
+        $scope.iterationRunning = false;
+        stopGlobalTimer();
+        initializeIterationTimer(0);
     }
 
     // Launch the instance
@@ -134,9 +139,7 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
                 initializeIterationTimer($scope.workshopSteps[$scope.roundNum]);
                 $scope.iterationRunning = false;
             } else {
-                $scope.done = true;
-                stopGlobalTimer();
-                initializeIterationTimer(0);
+                endOfWorkshop();
             }
         }
     };

@@ -18,15 +18,20 @@
         </div>
 
 
-        <div ng-if="!timerIsSync && !iterationRunning">
+        <div ng-if="!timerIsSync && !iterationRunning && !doneWorkshop">
             <button class="button button-positive button-rounded button-block" ng-click='synchronizeTimer()'>
                 Connect your workshop
             </button>
         </div>
-        <div ng-if="timerIsSync && !iterationRunning">
+        <div ng-if="timerIsSync && !iterationRunning && !doneWorkshop">
             <button class="button button-balanced button-rounded button-block" ng-click="startIteration()">
                 Start workshop
             </button>
+        </div>
+        <div ng-if="doneWorkshop">
+            <a class="button button-royal button-rounded button-block" href="#/tab/workshops">
+                The END (should bind this button to something else later and should contain a text shorter than this because it is a bit too long)
+            </a>
         </div>
 
     </ion-content>
