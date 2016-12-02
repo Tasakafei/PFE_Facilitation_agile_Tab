@@ -28,6 +28,20 @@
                 Start workshop
             </button>
         </div>
+        <div ng-if="timerIsSync && iterationRunning && !doneWorkshop">
+            <div class="row">
+                <div class="col">
+                    <button class="button button-balanced button-rounded button-block" ng-click="increaseTimer(30)">
+                        + 30 s
+                    </button>
+                </div>
+                <div class="col">
+                    <button class="button button-balanced button-rounded button-block" ng-click="decreaseTimer(30)">
+                        - 30 s
+                    </button>
+                </div>
+            </div>
+        </div>
         <div ng-if="doneWorkshop">
             <a class="button button-royal button-rounded button-block" href="#/tab/workshops">
                 The END (should bind this button to something else later and should contain a text shorter than this because it is a bit too long)

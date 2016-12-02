@@ -104,7 +104,7 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
         ispaused = true;
         $scope.started = false;
         $scope.paused = true;
-        stopIterationTimer();
+        stopIterationTimer(false);
     };
 
     $scope.resumeTimer = function(){
@@ -115,34 +115,58 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
 
     $scope.resetTimer = function(){
         ispaused = false;
-        stopIterationTimer();
+        stopIterationTimer(false);
         $scope.timer = $scope.timeForTimer;
         $scope.started = false;
         $scope.paused = false;
         $scope.done = false;
     };
 
+    $scope.increaseTimer = function (amount) {
+        stopIterationTimer(false);
+        $scope.timer += amount;
+        $scope.timeForTimer = $scope.timer;
+        var timerInfo = {"workshop":$scope.workshop._id,"duration":$scope.timeForTimer};
+        socket.emit('restart_timer', timerInfo);
+        runIterationTimer();
+    };
+
+    $scope.decreaseTimer = function (amount) {
+        stopIterationTimer(false);
+        var timerVal = $scope.timer - amount;
+        if(timerVal < 0) timerVal = 0;
+        $scope.timer = timerVal;
+        $scope.timeForTimer = $scope.timer;
+        var timerInfo = {"workshop":$scope.workshop._id,"duration":$scope.timeForTimer};
+        socket.emit('restart_timer', timerInfo);
+        runIterationTimer();
+    };
+
     function runIterationTimer(){
         timerInterval = $interval(function(){
             $scope.timer--;
             // TODO : Check if that fix is not totally shitty
-            if($scope.timer == -1) stopIterationTimer();
+            if($scope.timer == -1) stopIterationTimer(true);
         }, 1000);
     };
 
-    function stopIterationTimer() {
+    function stopIterationTimer(continueToNextIteration) {
         if (angular.isDefined(timerInterval)) {
             $interval.cancel(timerInterval);
             timerInterval = undefined;
-            $scope.roundNum++;
-            if($scope.roundNum < $scope.workshopSteps.length){
-                initializeIterationTimer($scope.workshopSteps[$scope.roundNum]);
-                $scope.iterationRunning = false;
-            } else {
-                endOfWorkshop();
-            }
+            if(continueToNextIteration) nextIteration();
         }
     };
+
+    function nextIteration(){
+        $scope.roundNum++;
+        if($scope.roundNum < $scope.workshopSteps.length){
+            initializeIterationTimer($scope.workshopSteps[$scope.roundNum]);
+            $scope.iterationRunning = false;
+        } else {
+            endOfWorkshop();
+        }
+    }
 
     function runGlobalTimer() {
         globalTimerInterval = $interval(function(){
