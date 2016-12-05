@@ -1,5 +1,5 @@
 <ion-view view-title="Workshops">
-    <ion-content class="padding">
+    <!--<ion-content class="padding">
         <h3>Vos ateliers choisis</h3>
         <div ng-repeat="workshop in workshops.data">
             <a href="#/tab/workshops/{{workshop._id}}">
@@ -7,5 +7,78 @@
                 <p>{{workshop.title}}</p>
             </a>
         </div>
+    </ion-content>-->
+
+
+    <ion-content ng-class="{expanded:isExpanded}" class="animate-fade-slide-in">
+        <div class="list half">
+            <a href="#/tab/workshops/{{workshops.data[0]._id}}" class="card card-gallery item item-text-wrap">
+                <div class="ink dark-bg">
+                    <h2>{{workshops.data[0].title}}</h2>
+                    <img class="full-image" src="{{workshops.data[0].photo}}">
+                </div>
+                <div class="item tabs tabs-secondary tabs-icon-left">
+                    <a class="tab-item stable-bg assertive">
+                        <i class="icon ion-heart"></i>
+                        4
+                    </a>
+                    <a class="tab-item stable-bg positive-900">
+                        <i class="icon ion-chatbubbles"></i>
+                        2
+                    </a>
+                </div>
+            </a>
+            <a href="#/tab/workshops/{{workshops.data[1]._id}}" class="card card-gallery item item-text-wrap">
+                <div class="ink dark-bg">
+                    <h2>{{workshops.data[1].title}}</h2>
+                    <img class="full-image" src="{{workshops.data[1].photo}}">
+                </div>
+                <div class="item tabs tabs-secondary tabs-icon-left">
+                    <a class="tab-item stable-bg assertive">
+                        <i class="icon ion-heart"></i>
+                        4
+                    </a>
+                    <a class="tab-item stable-bg positive-900">
+                        <i class="icon ion-chatbubbles"></i>
+                        2
+                    </a>
+                </div>
+            </a>
+        </div>
+        <div class="list half">
+            <a href="#/tab/workshops/{{workshops.data[2]._id}}" class="card card-gallery item item-text-wrap">
+                <div class="ink dark-bg">
+                    <h2>{{workshops.data[2].title}}</h2>
+                    <img class="full-image" src="{{workshops.data[2].photo}}">
+                </div>
+                <div class="item tabs tabs-secondary tabs-icon-left">
+                    <a class="tab-item stable-bg assertive">
+                        <i class="icon ion-heart"></i>
+                        4
+                    </a>
+                    <a class="tab-item stable-bg positive-900">
+                        <i class="icon ion-chatbubbles"></i>
+                        2
+                    </a>
+                </div>
+            </a>
+            <a href="#/tab/workshops/{{workshops.data[3]._id}}" class="card card-gallery item item-text-wrap">
+                <div class="ink dark-bg">
+                    <h2>{{workshops.data[3].title}}</h2>
+                    <img class="full-image" src="{{workshops.data[3].photo}}">
+                </div>
+                <div class="item tabs tabs-secondary tabs-icon-left">
+                    <a class="tab-item stable-bg assertive">
+                        <i class="icon ion-heart"></i>
+                        4
+                    </a>
+                    <a class="tab-item stable-bg positive-900">
+                        <i class="icon ion-chatbubbles"></i>
+                        2
+                    </a>
+                </div>
+            </a>
+        </div>
     </ion-content>
+
 </ion-view>
