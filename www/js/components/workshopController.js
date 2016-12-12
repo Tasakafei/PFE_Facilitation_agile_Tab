@@ -18,7 +18,7 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
     WorkshopsProvider.getWorkshopById($stateParams.workshopId, function (workshopResult) {
         $scope.workshop = workshopResult.data;
 
-        $scope.workshopSteps = filterWorkshopSteps(workshopResult.data).filter(function (duration) {return duration > -1;}); //[10,20,10]; // mocked
+        $scope.workshopSteps = filterWorkshopSteps(workshopResult.data).filter(function (duration) {return duration > -1;});
         $scope.overallTime = $scope.workshopSteps.reduce(function (a, b) {return a+b;});
         $scope.roundNum = 0; // first iteration
         initializeIterationTimer($scope.workshopSteps[$scope.roundNum]);
@@ -28,7 +28,7 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
     // Filter the steps to retrieve only the durations
     function filterWorkshopSteps(workshop){
         return workshop.steps.map(function (step) {
-            if(step.duration != undefined && step.duration.theorical != undefined) return step.duration.theorical;
+            if(step.duration != undefined && step.duration.theorical != undefined) return step.duration.theorical * 60;
             else return -1;
         });
     };
