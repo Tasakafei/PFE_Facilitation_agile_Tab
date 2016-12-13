@@ -18,15 +18,20 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
     WorkshopsProvider.getWorkshopById($stateParams.workshopId, function (workshopResult) {
         $scope.workshop = workshopResult.data;
 
-        $scope.workshopSteps = filterWorkshopSteps(workshopResult.data).filter(function (duration) {return duration > -1;});
-        $scope.overallTime = $scope.workshopSteps.reduce(function (a, b) {return a+b;});
+        $scope.workshopStepsDuration = filterWorkshopDurationSteps(workshopResult.data).filter(function (duration) {return duration > -1;});
+        $scope.overallTime = $scope.workshopStepsDuration.reduce(function (a, b) {return a+b;});
         $scope.roundNum = 0; // first iteration
-        initializeIterationTimer($scope.workshopSteps[$scope.roundNum]);
+        $scope.currentStep = $scope.workshop.steps[$scope.roundNum];
+        if($scope.workshop.steps[$scope.roundNum+1] != undefined)
+            $scope.nextStep = $scope.workshop.steps[$scope.roundNum+1];
+        else
+            $scope.nextStep = "";
+        initializeIterationTimer($scope.workshopStepsDuration[$scope.roundNum]);
         initializeGlobalTimer($scope.overallTime);
     });
 
     // Filter the steps to retrieve only the durations
-    function filterWorkshopSteps(workshop){
+    function filterWorkshopDurationSteps(workshop){
         return workshop.steps.map(function (step) {
             if(step.duration != undefined && step.duration.theorical != undefined) return step.duration.theorical * 60;
             else return -1;
@@ -73,6 +78,7 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
         $scope.doneWorkshop = true;
         $scope.workshopRunning = false;
         $scope.iterationRunning = false;
+        $scope.roundNum = 0;
         stopGlobalTimer();
         initializeIterationTimer(0);
     }
@@ -160,8 +166,13 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
 
     function nextIteration(){
         $scope.roundNum++;
-        if($scope.roundNum < $scope.workshopSteps.length){
-            initializeIterationTimer($scope.workshopSteps[$scope.roundNum]);
+        if($scope.roundNum < $scope.workshopStepsDuration.length){
+            initializeIterationTimer($scope.workshopStepsDuration[$scope.roundNum]);
+            $scope.currentStep = $scope.workshop.steps[$scope.roundNum];
+            if($scope.workshop.steps[$scope.roundNum+1] != undefined)
+                $scope.nextStep = $scope.workshop.steps[$scope.roundNum+1];
+            else
+                $scope.nextStep = "";
             $scope.iterationRunning = false;
         } else {
             endOfWorkshop();

@@ -1,6 +1,26 @@
 <ion-view view-title="{{workshop.title}}">
     <ion-content class="padding">
 
+        <div class="card">
+            <div class="item item-divider">
+                <h2>{{currentStep.title}}</h2>
+            </div>
+            <div class="item item-text-wrap" ng-bind-html="currentStep.description">
+            </div>
+            <div class="item item-divider"></div>
+            <div class="item item-content">
+                <h2>Next iteration : </h2>
+                <div class="card">
+                    <div class="item item-divider item-text-wrap">
+                        <p>{{nextStep.title}}</p>
+                    </div>
+                    <div class="item item-content">
+                        <p>{{nextStep.description}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div>
             <h3>Global Timer</h3>
             <div ng-if="!isLate">{{humanizeDurationTimer(globalTimer,'s')}}</div>
