@@ -10,7 +10,6 @@ angular.module('facilitation',
       'ionic',
       'ionic-material',
       'socketio.service',
-      'facilitation.startersCtrl',
       'angular-svg-round-progress'
     ])
 
