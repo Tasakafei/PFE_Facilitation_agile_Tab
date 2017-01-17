@@ -215,15 +215,24 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
         //TODO Manage to do it without this
         var delay=500; //0.5sec
         setTimeout(function() {
-            var hauteurIteration = document.getElementById("actual-iteration").offsetHeight;
-            console.log(hauteurIteration);
 
+            //Get elem #actual-iteration
+            var actualIteration = document.getElementById("actual-iteration");
+
+            //Get height of it
+            var hauteurIteration = actualIteration.offsetHeight;
+
+            //Get margins height
+            var offSet = window.getComputedStyle(actualIteration).getPropertyValue('margin-top').split("px");
+            hauteurIteration += parseInt(offSet[0]);
+            offSet = window.getComputedStyle(actualIteration).getPropertyValue('margin-bottom').split("px");
+            hauteurIteration += parseInt(offSet[0]);
+
+            //Get height of #first-row
             var hauteurTotale = document.getElementById("first-row").offsetHeight;
-            console.log(hauteurTotale);
 
+            //Calc the height we can give to #first-row-in
             var heightNextIteration = hauteurTotale - hauteurIteration;
-            heightNextIteration = heightNextIteration - 13; //TODO find this 13px
-
             document.getElementById("first-row-in").style.height = heightNextIteration + "px";
         }, delay);
 
