@@ -2,7 +2,7 @@
 /*progress time text on middle of circle*/
 .progress-wrapper{
     position: relative;
-    margin:20px auto;
+    margin: auto;
     font-size: 21px;
 }
 .progress{
@@ -21,4 +21,89 @@
 
 .material-fix h2{
     margin: 0.3em;
+}
+
+/* WORKSHOP */
+#workshop .scroll {
+    min-height: 100% !important;
+    height: 100% !important;
+}
+
+#workshop #first-row {
+    height: 50%;
+    overflow-y: hidden;
+    padding: 0px 0px 0px 0px;
+    margin-top: 0px;
+}
+
+#workshop .second-row {
+    height: 50%;
+    overflow-y: scroll;
+    padding: 0px 0px 0px 0px;
+    margin-top: 0px;
+}
+
+
+div#global-timer {
+    /*
+    position: relative;
+    padding: 0;
+    */
+    display: flex;
+}
+
+div#global-timer-in {
+    /*
+    position: absolute;
+    bottom: 0;
+    border-top: 2px solid black;
+    border-right: 2px solid black;
+    padding: 30px 80px 30px 30px;
+    */
+    margin: auto;
+}
+
+#timer {
+    display: flex;
+}
+
+#timer-buttons {
+    display: flex;
+}
+
+#timer-buttons-in {
+    margin: auto;
+}
+
+#workshop .item.item-divider {
+    height: initial;
+}
+
+#workshop .item.item-text-wrap {
+    padding-top: 5px;
+}
+
+#workshop #first-row-in {
+    padding: 0;
+}
+
+div#actual-iteration::-webkit-scrollbar {
+    display: none;
+}
+
+.second-row::-webkit-scrollbar {
+    display: none;
+}
+
+div#actual-iteration {
+    max-height: 75%;
+    overflow-y: scroll;
+}
+
+#first-row-in .col.col-80 {
+    overflow-y: scroll;
+}
+
+#first-row-in .col.col-80::-webkit-scrollbar {
+    display: none;
 }

@@ -174,6 +174,7 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
             else
                 $scope.nextStep = "";
             $scope.iterationRunning = false;
+            putNextStepMaxHeight();
         } else {
             endOfWorkshop();
         }
@@ -206,4 +207,27 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
     $scope.humanizeDurationTimer = function(input, units) {
         return TimerService.humanizeDurationTimer(input, units);
     };
+
+
+    //Calc the height of the next step dynamically
+    function putNextStepMaxHeight() {
+
+        //TODO Manage to do it without this
+        var delay=500; //0.5sec
+        setTimeout(function() {
+            var hauteurIteration = document.getElementById("actual-iteration").offsetHeight;
+            console.log(hauteurIteration);
+
+            var hauteurTotale = document.getElementById("first-row").offsetHeight;
+            console.log(hauteurTotale);
+
+            var heightNextIteration = hauteurTotale - hauteurIteration;
+            heightNextIteration = heightNextIteration - 13; //TODO find this 13px
+
+            document.getElementById("first-row-in").style.height = heightNextIteration + "px";
+        }, delay);
+
+    }
+    putNextStepMaxHeight();
+
 });
