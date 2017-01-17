@@ -17,23 +17,27 @@
     </ion-content>-->
 
 
-    <ion-content ng-class="{expanded:isExpanded}" class="animate-fade-slide-in">
-
-
+    <ion-content class="animate-fade-slide-in">
 
         <div class="row">
             <div class="col">
-                <a ng-repeat="workshop in workshopSlice1" href="#/tab/workshops/{{workshop._id}}" class="card card-gallery material-fix">
+                <h3 class="main-title">Vos instances d'ateliers</h3>
+            </div>
+        </div>
+        <div class="row" id="workshops-list">
+            <div ng-repeat="workshop in workshops" class="col col-33">
+                <a  href="#/tab/workshops/{{workshop._id}}" class="card card-gallery material-fix">
                     <div class="ink light calm-bg">
-                        <h2>{{workshop.title}}</h2>
+                        <h4 class="workshop-title">{{workshop.title}}</h4>
                         <img class="full-image" src="{{workshop.photo}}">
                     </div>
                 </a>
             </div>
-            <div class="col">
+            <!--
+            <div class="col col-33">
                 <a ng-repeat="workshop in workshopSlice2" href="#/tab/workshops/{{workshop._id}}" class="card card-gallery material-fix">
                     <div class="ink light calm-bg">
-                        <h2>{{workshop.title}}</h2>
+                        <h4 class="workshop-title">{{workshop.title}}</h4>
                         <img class="full-image" src="{{workshop.photo}}">
                     </div>
                 </a>

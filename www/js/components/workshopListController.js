@@ -21,7 +21,8 @@ app.controller('WorkshopListCtrl', function($scope, WorkshopsProvider, $statePar
         selector: '.animate-fade-slide-in .item'
     });
     WorkshopsProvider.getWorkshops(function (workshopsResult) {
-        $scope.workshops = workshopsResult;
+        $scope.workshops = workshopsResult.data;
+
         //$scope.workshopsGrouped = groupWorkshops(workshopsResult);
         $scope.workshopSlice1 = workshopsResult.data.slice(0, workshopsResult.data.length/2);
         $scope.workshopSlice2 = workshopsResult.data.slice(workshopsResult.data.length/2, workshopsResult.data.length);

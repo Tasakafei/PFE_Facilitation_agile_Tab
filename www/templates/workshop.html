@@ -60,21 +60,21 @@
                         </button>
                     </div>
                     <div ng-if="timerIsSync && !iterationRunning && !doneWorkshop">
-                        <button class="button button-balanced button-rounded button-block" ng-click="startIteration()">
+                        <button class="button button-positive button-rounded button-block" ng-click="startIteration()">
                             Start iteration
                         </button>
                     </div>
                     <div ng-if="timerIsSync && iterationRunning && !doneWorkshop">
                         <div class="row">
                             <div class="col">
-                                <button class="button button-balanced button-rounded button-block" ng-click="increaseTimer(30)">
+                                <button class="button button-positive button-rounded button-block" ng-click="increaseTimer(30)">
                                     + 30 s
                                 </button>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col">
-                                <button class="button button-balanced button-rounded button-block" ng-click="decreaseTimer(30)">
+                                <button class="button button-positive button-rounded button-block" ng-click="decreaseTimer(30)">
                                     - 30 s
                                 </button>
                             </div>

@@ -107,3 +107,47 @@ div#actual-iteration {
 #first-row-in .col.col-80::-webkit-scrollbar {
     display: none;
 }
+
+/* Workshop list */
+.main-title {
+   margin-left: 20px;
+    margin-bottom: 0;
+    margin-top: 10px !important;
+}
+
+.workshop-title {
+    padding-left: 10px;
+}
+
+#workshops-list {
+    -webkit-flex-wrap: wrap;
+    flex-wrap: wrap;
+}
+
+/* #1a242f
+#2c3e50
+*/
+
+/* Theme colors */
+.bar .button-positive-900, .bar .button-positive-900.activated, .bar .button-positive-900:active, .bar .button-positive-900:hover, .bar-positive-900, .bar-positive-900.activated, .bar-positive-900:active, .bar-positive-900:hover, .button-bar-positive-900, .button-bar-positive-900.activated, .button-bar-positive-900:active, .button-bar-positive-900:hover, .button-positive-900, .button-positive-900.activated, .button-positive-900:active, .button-positive-900:hover, .header-positive-900, .header-positive-900.activated, .header-positive-900:active, .header-positive-900:hover, .positive-900-bg, .positive-900-bg.activated, .positive-900-bg:active, .positive-900-bg:hover, .positive-900-border, .positive-900-border.activated, .positive-900-border:active, .positive-900-border:hover {
+    background-color: #2c3e50 !important;
+}
+
+.bar .button-calm, .bar-calm, .button-bar-calm, .button-calm, .calm-bg, .calm-border, .header-calm {
+    background-color: #2c3e50 !important;
+}
+ .bar .button-calm.activated, .bar .button-calm:active, .bar .button-calm:hover, .bar-calm.activated, .bar-calm:active, .bar-calm:hover, .button-bar-calm.activated, .button-bar-calm:active, .button-bar-calm:hover, .button-calm.activated, .button-calm:active, .button-calm:hover, .calm-bg.activated, .calm-bg:active, .calm-bg:hover, .calm-border.activated, .calm-border:active, .calm-border:hover, .header-calm.activated, .header-calm:active, .header-calm:hover {
+    background-color: #1a242f !important;
+}
+
+.button.button-positive {
+    background-color: #2c3e50 !important;
+}
+
+.bar .button-positive, .bar .button-positive.activated, .bar .button-positive:active, .bar .button-positive:hover, .bar-positive, .bar-positive.activated, .bar-positive:active, .bar-positive:hover, .button-bar-positive, .button-bar-positive.activated, .button-bar-positive:active, .button-bar-positive:hover, .button-positive, .button-positive.activated, .button-positive:active, .button-positive:hover, .header-positive, .header-positive.activated, .header-positive:active, .header-positive:hover, .positive-bg, .positive-bg.activated, .positive-bg:active, .positive-bg:hover, .positive-border, .positive-border.activated, .positive-border:active, .positive-border:hover {
+    background-color: #1a242f !important;
+}
+
+#timer path {
+    stroke: #2c3e50 !important;
+}
