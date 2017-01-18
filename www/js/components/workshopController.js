@@ -12,6 +12,7 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
 
 
     var timerInterval, globalTimerInterval, ispaused = false;
+    var audio;
 
 
     // Automatically retrieve the workshop instance when arriving in this controller
@@ -160,9 +161,22 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
         if (angular.isDefined(timerInterval)) {
             $interval.cancel(timerInterval);
             timerInterval = undefined;
-            if(continueToNextIteration) nextIteration();
+            if(continueToNextIteration) {
+                $scope.timerIsSync = false;
+                $scope.iterationRunning = false;
+                $scope.continueToNextIteration = true;
+                audio = new Audio('../../sound/ALARM-DANGER-WARNING_Sound_Effect.mp3');
+                audio.play();
+            }
         }
     };
+
+    $scope.stopSound = function() {
+        audio.pause();
+        nextIteration();
+        $scope.continueToNextIteration = false;
+        $scope.timerIsSync = true;
+    }
 
     function nextIteration(){
         $scope.roundNum++;
@@ -173,7 +187,6 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
                 $scope.nextStep = $scope.workshop.steps[$scope.roundNum+1];
             else
                 $scope.nextStep = "";
-            $scope.iterationRunning = false;
             putNextStepMaxHeight();
         } else {
             endOfWorkshop();
