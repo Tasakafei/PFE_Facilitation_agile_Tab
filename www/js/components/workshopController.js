@@ -167,12 +167,15 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
                 $scope.continueToNextIteration = true;
                 audio = new Audio('../../sound/ALARM-DANGER-WARNING_Sound_Effect.mp3');
                 audio.play();
+                console.log("emit start sound");
+                socket.emit('start_sound', $scope.workshop._id);
             }
         }
     };
 
     $scope.stopSound = function() {
         audio.pause();
+        socket.emit('stop_sound', $scope.workshop._id);
         nextIteration();
         $scope.continueToNextIteration = false;
         $scope.timerIsSync = true;
