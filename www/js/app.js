@@ -10,10 +10,14 @@ angular.module('facilitation',
       'ionic',
       'ionic-material',
       'socketio.service',
-      'angular-svg-round-progress'
+      'angular-svg-round-progress',
+      'ngCookies',
+      'ngResource',
+      'ngSanitize',
+      'http-auth-interceptor',
     ])
 
-.run(function($ionicPlatform, socket) {
+.run(function($ionicPlatform, socket, $rootScope, $location, Auth) {
   $ionicPlatform.ready(function() {
 
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -28,6 +32,21 @@ angular.module('facilitation',
       StatusBar.styleDefault();
     }
   });
+
+    //watching the value of the currentUser variable.
+    $rootScope.$watch('currentUser', function(currentUser) {
+        // if no currentUser and on a page that requires authorization then try to update it
+        // will trigger 401s if user does not have a valid session
+        if (!currentUser && (['/'].indexOf($location.path()) == -1 )) {
+            Auth.currentUser();
+        }
+    });
+
+    // On catching 401 errors, redirect to the login page.
+    $rootScope.$on('event:auth-loginRequired', function() {
+        $location.path('/');
+        return false;
+    });
 })
 
 .config(function($stateProvider, $urlRouterProvider) {
@@ -43,6 +62,16 @@ angular.module('facilitation',
     url: '/tab',
     abstract: true,
     templateUrl: 'templates/tabs.html'
+  })
+
+  .state('tab.login', {
+      url: '/login',
+      views: {
+          'tab-login': {
+              templateUrl: 'templates/login.html',
+              controller: 'LoginCtrl'
+          }
+      }
   })
 
   .state('tab.workshopList', {
@@ -66,6 +95,6 @@ angular.module('facilitation',
   });
 
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/tab/workshops');
+  $urlRouterProvider.otherwise('/tab/login');
 
 });
