@@ -71,7 +71,8 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
 
     // Initialize the value(s) for the global timer
     function initializeGlobalTimer(val) {
-        $scope.globalTimer = val;
+        $scope.theoreticalGlobalTimer = val;
+        $scope.actualGlobalTimer = val;
         $scope.isLate = false;
     }
 
@@ -132,6 +133,7 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
     $scope.increaseTimer = function (amount) {
         stopIterationTimer(false);
         $scope.timer += amount;
+        $scope.actualGlobalTimer += amount;
         $scope.timeForTimer = $scope.timer;
         var timerInfo = {"workshop":$scope.workshop._id,"duration":$scope.timeForTimer};
         socket.emit('restart_timer', timerInfo);
@@ -140,9 +142,11 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
 
     $scope.decreaseTimer = function (amount) {
         stopIterationTimer(false);
+        $scope.actualGlobalTimer -= $scope.timer;
         var timerVal = $scope.timer - amount;
         if(timerVal < 0) timerVal = 0;
         $scope.timer = timerVal;
+        $scope.actualGlobalTimer += $scope.timer;
         $scope.timeForTimer = $scope.timer;
         var timerInfo = {"workshop":$scope.workshop._id,"duration":$scope.timeForTimer};
         socket.emit('restart_timer', timerInfo);
@@ -152,6 +156,7 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
     function runIterationTimer(){
         timerInterval = $interval(function(){
             $scope.timer--;
+            $scope.actualGlobalTimer--;
             // TODO : Check if that fix is not totally shitty
             if($scope.timer == -1) {
                 $scope.timer = 0;
@@ -202,12 +207,12 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
     function runGlobalTimer() {
         globalTimerInterval = $interval(function(){
             if($scope.isLate){
-                $scope.globalTimer++;
+                $scope.theoreticalGlobalTimer++;
             } else {
-                $scope.globalTimer--;
-                if($scope.globalTimer == -1) {
+                $scope.theoreticalGlobalTimer--;
+                if($scope.theoreticalGlobalTimer == -1) {
                     $scope.isLate = true;
-                    $scope.globalTimer = 1;
+                    $scope.theoreticalGlobalTimer = 1;
                 }
             }
 

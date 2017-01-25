@@ -35,11 +35,13 @@
             <div id="global-timer" class="col col-33">
                 <div id="global-timer-in">
                         <h3>Chronomètre global</h3>
-                    <div ng-if="!isLate">{{humanizeDurationTimer(globalTimer,'s')}}</div>
+                    <div ng-if="!isLate">{{humanizeDurationTimer(theoreticalGlobalTimer,'s')}}</div>
                     <div ng-if="isLate">
                         <span>{{humanizeDurationTimer(overallTime,'s')}} </span>
-                        <span style="color: red;">+ {{humanizeDurationTimer(globalTimer,'s')}}</span>
+                        <span style="color: red;">+ {{humanizeDurationTimer(theoreticalGlobalTimer,'s')}}</span>
                     </div>
+                        <h3>Chrono global actuel</h3>
+                        {{humanizeDurationTimer(actualGlobalTimer,'s')}}
                 </div>
             </div>
 
