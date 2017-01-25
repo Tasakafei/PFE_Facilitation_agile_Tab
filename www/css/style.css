@@ -151,3 +151,22 @@ div#actual-iteration {
 #timer path {
     stroke: #2c3e50 !important;
 }
+
+/* Conducteur */
+#table .header .col {
+    background-color:lightgrey;
+}
+
+#table .col {
+    border: solid 1px grey;
+    border-bottom-style: none;
+    border-right-style: none;
+}
+
+#table .col:last-child {
+    border-right: solid 1px grey;
+}
+
+#table .row:last-child .col {
+    border-bottom: solid 1px grey;
+}

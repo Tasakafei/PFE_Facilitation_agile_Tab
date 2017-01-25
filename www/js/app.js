@@ -92,7 +92,18 @@ angular.module('facilitation',
         controller: 'WorkshopCtrl'
       }
     }
+  })
+
+  .state('tab.workshopConductor', {
+    url: '/workshops/:workshopId/conductor',
+    views: {
+      'tab-workshop': {
+        templateUrl: 'templates/workshopConductor.html',
+        controller: 'WorkshopConductorCtrl'
+      }
+    }
   });
+
 
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/tab/login');

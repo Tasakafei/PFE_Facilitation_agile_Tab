@@ -1,0 +1,23 @@
+<ion-view view-title="Conducteur de l'atelier">
+    <ion-content scroll="true">
+        <div id="table">
+            <div class="row header">
+                <div class="col col-10 text-center">Timing</div>
+                <div class="col col-10 text-center">Phase</div>
+                <div class="col text-center">Description</div>
+                <div class="col col-20 text-center">Modifier</div>
+            </div>
+            <div class="row" ng-repeat="step in workshop.steps">
+                <div class="col col-10 text-center">{{timingArray[$index]}}</div>
+                <div class="col col-10 text-center">{{step.title}}<br />{{step.duration.theorical}}</div>
+                <div class="col" ng-bind-html="step.description"></div>
+                <div class="col col-20 text-center">
+                    <div ng-if="$index < stepsLenght -1">
+                    <button class="button button-positive button-rounded">+ 30 s</button>
+                    <button class="button button-positive button-rounded">- 30 s</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ion-content>
+</ion-view>

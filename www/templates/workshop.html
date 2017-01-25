@@ -13,7 +13,8 @@
                 <div class="row" id="first-row-in">
                     <div class="col col-20">
                     <div class="item item-divider">
-                        <h2>Next iteration : </h2>
+                        <h2>Prochaine iteration : </h2>
+                        <a class="button button-positive button-rounded button-block" href="#/tab/workshops/{{workshop._id}}/conductor">Voir le conducteur</a>
                     </div>
                 </div>
                     <div class="col col-80">
@@ -33,7 +34,7 @@
 
             <div id="global-timer" class="col col-33">
                 <div id="global-timer-in">
-                    <h3>Global Timer</h3>
+                        <h3>Chronomètre global</h3>
                     <div ng-if="!isLate">{{humanizeDurationTimer(globalTimer,'s')}}</div>
                     <div ng-if="isLate">
                         <span>{{humanizeDurationTimer(overallTime,'s')}} </span>
@@ -56,12 +57,12 @@
                 <div id="timer-buttons-in">
                     <div ng-if="!timerIsSync && !iterationRunning && !doneWorkshop && !continueToNextIteration">
                         <button class="button button-positive button-rounded button-block" ng-click='synchronizeTimer()'>
-                            Connect your workshop
+                            Connecter l'atelier
                         </button>
                     </div>
                     <div ng-if="timerIsSync && !iterationRunning && !doneWorkshop">
                         <button class="button button-positive button-rounded button-block" ng-click="startIteration()">
-                            Start iteration
+                            Lancer l'iteration
                         </button>
                     </div>
                     <div ng-if="timerIsSync && iterationRunning && !doneWorkshop">
@@ -82,12 +83,12 @@
                     </div>
                     <div ng-if="doneWorkshop">
                         <a class="button button-positive button-rounded button-block" href="#/tab/workshops">
-                            The END
+                            Fin de l'atelier
                         </a>
                     </div>
                     <div ng-if="continueToNextIteration">
                         <button class="button button-positive button-rounded button-block" ng-click="stopSound()">
-                            Stop sound and go next
+                            Arrêter l'alarme
                         </button>
                     </div>
                 </div>
