@@ -17,7 +17,7 @@ angular.module('facilitation',
       'http-auth-interceptor',
     ])
 
-.run(function($ionicPlatform, socket, $rootScope, $location, Auth) {
+.run(function($ionicPlatform, socket, $rootScope, $location) {
   $ionicPlatform.ready(function() {
 
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -35,17 +35,9 @@ angular.module('facilitation',
 
     //watching the value of the currentUser variable.
     $rootScope.$watch('currentUser', function(currentUser) {
-        // if no currentUser and on a page that requires authorization then try to update it
-        // will trigger 401s if user does not have a valid session
-        if (!currentUser && (['/'].indexOf($location.path()) == -1 )) {
-            Auth.currentUser();
+        if(currentUser == null && (['/tab/login'].indexOf($location.path()) == -1 )){
+            $location.path('/');
         }
-    });
-
-    // On catching 401 errors, redirect to the login page.
-    $rootScope.$on('event:auth-loginRequired', function() {
-        $location.path('/');
-        return false;
     });
 })
 
@@ -53,7 +45,7 @@ angular.module('facilitation',
 
   // Ionic uses AngularUI Router which uses the concept of states
   // Learn more here: https://github.com/angular-ui/ui-router
-  // Set up the various states which the app can be in.
+  // Set up the various states  which the app can be in.
   // Each state's controller can be found in controllers.js
   $stateProvider
 
