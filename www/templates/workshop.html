@@ -54,7 +54,7 @@
 
             <div id="timer-buttons" class="col col-33">
                 <div id="timer-buttons-in">
-                    <div ng-if="!timerIsSync && !iterationRunning && !doneWorkshop">
+                    <div ng-if="!timerIsSync && !iterationRunning && !doneWorkshop && !continueToNextIteration">
                         <button class="button button-positive button-rounded button-block" ng-click='synchronizeTimer()'>
                             Connect your workshop
                         </button>
@@ -81,9 +81,14 @@
                         </div>
                     </div>
                     <div ng-if="doneWorkshop">
-                        <a class="button button-royal button-rounded button-block" href="#/tab/workshops">
-                            The END (should bind this button to something else later and should contain a text shorter than this because it is a bit too long)
+                        <a class="button button-positive button-rounded button-block" href="#/tab/workshops">
+                            The END
                         </a>
+                    </div>
+                    <div ng-if="continueToNextIteration">
+                        <button class="button button-positive button-rounded button-block" ng-click="stopSound()">
+                            Stop sound and go next
+                        </button>
                     </div>
                 </div>
             </div>
