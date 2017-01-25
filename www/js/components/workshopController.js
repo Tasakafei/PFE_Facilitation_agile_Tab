@@ -153,7 +153,10 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
         timerInterval = $interval(function(){
             $scope.timer--;
             // TODO : Check if that fix is not totally shitty
-            if($scope.timer == -1) stopIterationTimer(true);
+            if($scope.timer == -1) {
+                $scope.timer = 0;
+                stopIterationTimer(true);
+            }
         }, 1000);
     };
 
