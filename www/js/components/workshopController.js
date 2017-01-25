@@ -16,7 +16,7 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
 
 
     // Automatically retrieve the workshop instance when arriving in this controller
-    WorkshopsProvider.getWorkshopById($stateParams.workshopId, $scope.user, function (workshopResult) {
+    WorkshopsProvider.getWorkshopById($stateParams.workshopId, function (workshopResult) {
         $scope.workshop = workshopResult.data;
 
         $scope.workshopStepsDuration = filterWorkshopDurationSteps(workshopResult.data).filter(function (duration) {return duration > -1;});

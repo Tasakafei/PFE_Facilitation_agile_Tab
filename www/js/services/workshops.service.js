@@ -12,7 +12,7 @@ app.service('WorkshopsProvider', function ($http, $rootScope) {
 
 
     delete $http.defaults.headers.common['X-Requested-With'];
-    this.getWorkshops = function (user, callback) {
+    this.getWorkshops = function (callback) {
         $http.get('connection.properties').then(function (response) {
             host = response.data.serverURL;
             $http({
@@ -31,7 +31,7 @@ app.service('WorkshopsProvider', function ($http, $rootScope) {
     };
 
     delete $http.defaults.headers.common['X-Requested-With'];
-    this.getWorkshopById = function(idWorkshop, user, callback){
+    this.getWorkshopById = function(idWorkshop, callback){
         $http.get('connection.properties').then(function (response) {
             host = response.data.serverURL;
             $http({
