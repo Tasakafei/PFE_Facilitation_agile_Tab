@@ -5,7 +5,16 @@ var app = angular.module('facilitation');
 app.controller('LoginCtrl', function($scope, Auth) {
 
     $scope.error = {};
+    $scope.profile = {};
     $scope.user = {};
+
+    $scope.fakeLogIn = function () {
+        if($scope.user.login != undefined && $scope.user.password != undefined){
+            Auth.fakeLogin($scope.user, function () {
+                window.location.replace("http://localhost:8100/#/tab/workshops");
+            });
+        }
+    };
 
     $scope.logIn = function() {
         Auth.login('password', {

@@ -67,7 +67,7 @@ angular.module('facilitation',
   .state('tab.login', {
       url: '/login',
       views: {
-          'tab-login': {
+          'tab-workshop': {
               templateUrl: 'templates/login.html',
               controller: 'LoginCtrl'
           }

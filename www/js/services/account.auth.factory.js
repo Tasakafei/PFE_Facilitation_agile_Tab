@@ -8,11 +8,14 @@
 angular.module('facilitation')
     .factory('Auth', function Auth($location, $rootScope, Session, User, $cookieStore) {
         $rootScope.currentUser = $cookieStore.get('user') || null;
-        console.log("TEST");
-        console.log($rootScope.currentUser);
         $cookieStore.remove('user');
 
         return {
+
+            fakeLogin: function (user, callback) {
+                $rootScope.currentUser = user;
+                return callback();
+            },
 
             login: function(provider, user, callback) {
                 var cb = callback || angular.noop;
@@ -22,10 +25,12 @@ angular.module('facilitation')
                     password: user.password,
                     rememberMe: user.rememberMe
                 }, function(user) {
+                    console.log("no error according to the login func");
                     $rootScope.currentUser = user;
                     return cb();
                 }, function(err) {
-                    console.log(err);
+                    console.log("ERROR according to the login func");
+                    console.log(JSON.stringify(err));
                     return cb(err.data);
                 });
             },

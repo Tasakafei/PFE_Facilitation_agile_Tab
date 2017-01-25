@@ -20,7 +20,7 @@ app.controller('WorkshopListCtrl', function($scope, WorkshopsProvider, $statePar
     ionicMaterialMotion.fadeSlideInRight({
         selector: '.animate-fade-slide-in .item'
     });
-    WorkshopsProvider.getWorkshops(function (workshopsResult) {
+    WorkshopsProvider.getWorkshops($scope.user, function (workshopsResult) {
         $scope.workshops = workshopsResult.data;
 
         //$scope.workshopsGrouped = groupWorkshops(workshopsResult);
