@@ -170,6 +170,7 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
             $interval.cancel(timerInterval);
             timerInterval = undefined;
             if(continueToNextIteration) {
+                $scope.actualGlobalTimer += 1;
                 $scope.timerIsSync = false;
                 $scope.iterationRunning = false;
                 $scope.continueToNextIteration = true;

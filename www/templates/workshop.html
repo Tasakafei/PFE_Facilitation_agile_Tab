@@ -41,7 +41,13 @@
                         <span style="color: red;">+ {{humanizeDurationTimer(theoreticalGlobalTimer,'s')}}</span>
                     </div>
                         <h3>Chrono global actuel</h3>
-                        {{humanizeDurationTimer(actualGlobalTimer,'s')}}
+                    <div ng-if="actualGlobalTimer > theoreticalGlobalTimer">
+                        <span style="color: red;">{{humanizeDurationTimer(actualGlobalTimer,'s')}} (+ {{humanizeDurationTimer(actualGlobalTimer - theoreticalGlobalTimer,'s')}})</span>
+                    </div>
+                    <div ng-if="actualGlobalTimer <= theoreticalGlobalTimer">
+                        <span style="color: green;">{{humanizeDurationTimer(actualGlobalTimer,'s')}}</span>
+                    </div>
+
                 </div>
             </div>
 
