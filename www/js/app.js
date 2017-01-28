@@ -91,7 +91,7 @@ angular.module('facilitation',
     views: {
       'tab-workshop': {
         templateUrl: 'templates/workshopConductor.html',
-        controller: 'WorkshopConductorCtrl'
+        controller: 'WorkshopCtrl'
       }
     }
   });

@@ -9,10 +9,10 @@
             </div>
             <div class="row" ng-repeat="step in workshop.steps">
                 <div class="col col-10 text-center">{{timingArray[$index]}}</div>
-                <div class="col col-10 text-center">{{step.title}}<br />{{step.duration.theorical}}</div>
+                <div class="col col-10 text-center">{{step.title}}<br />{{step.duration.theoricalMinutes}}</div>
                 <div class="col" ng-bind-html="step.description"></div>
                 <div class="col col-20 text-center">
-                    <div ng-if="$index < stepsLenght -1">
+                    <div ng-if="$index < stepsLength -1">
                     <button class="button button-positive button-rounded">+ 30 s</button>
                     <button class="button button-positive button-rounded">- 30 s</button>
                     </div>
