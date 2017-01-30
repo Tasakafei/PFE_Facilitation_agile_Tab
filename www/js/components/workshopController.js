@@ -99,13 +99,51 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
         if(iterationNb >= $scope.roundNum){
             // TODO : Condition to remove in the future to accept empty iterations
             if($scope.workshopStepsDuration[iterationNb] != -1){
-                $scope.workshopStepsDuration[iterationNb] += value;
-                $scope.workshop.steps[iterationNb].duration.theoricalMinutes =
-                    $scope.workshopStepsDuration[iterationNb]/60 + " minutes";
+                // Modifying current iteration data
+                if(iterationNb == $scope.roundNum) {
+                    if (value < 0) {
+                        // If the iteration is running, using the functions designed to change the timer
+                        if($scope.iterationRunning == true){
+                            $scope.decreaseTimer(-(value));
+                        } else {
+                            handleTimersDecrease(-(value));
+                        }
+                    } else {
+                        if($scope.iterationRunning == true){
+                            $scope.increaseTimer(value);
+                        } else {
+                            handleTimersIncrease(value);
+                        }
+                    }
+                } else {
+                    // Updating actual global timer (if not handled before with the current iteration)
+                    if($scope.workshopStepsDuration[iterationNb] != 0) {
+                        $scope.actualGlobalTimer += value;
+                        if ($scope.actualGlobalTimer < 0) {
+                            $scope.actualGlobalTimer = 0;
+                        }
+                        updateTimersInConductor(iterationNb, value);
+                    }
+                }
             }
 
         }
     };
+
+    /**
+     * Simply updates the values showed in the conductor view
+     *
+     * @param iterationNb   The iteration timer to update
+     * @param value         The value to add to the timer (can be negative)
+     */
+    function updateTimersInConductor(iterationNb, value){
+        $scope.workshopStepsDuration[iterationNb] += value;
+        if($scope.workshopStepsDuration[iterationNb] < 0) {
+            $scope.workshopStepsDuration[iterationNb] = 0;
+        }
+        $scope.workshop.steps[iterationNb].duration.theoricalMinutes =
+            $scope.workshopStepsDuration[iterationNb]/60 + " minutes";
+    }
 
     // Filter the steps to retrieve only the durations
     function filterWorkshopDurationSteps(workshop){
@@ -206,28 +244,62 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
         $scope.done = false;
     };
 
+    /**
+     * Increase the timers according to the amount in parameters
+     * Used for the +30 button
+     * Stops and rerun the timers to stay synchronized so must be used when the timers are running
+     * TODO : Change the bad names of theses 4 methods
+     * @param amount
+     */
     $scope.increaseTimer = function (amount) {
         stopIterationTimer(false);
-        $scope.timer += amount;
-        $scope.actualGlobalTimer += amount;
-        $scope.timeForTimer = $scope.timer;
+        handleTimersIncrease(amount);
         var timerInfo = {"workshop":$scope.workshop._id,"duration":$scope.timeForTimer};
         socket.emit('restart_timer', timerInfo);
         runIterationTimer();
     };
 
+    /**
+     * Increase the timers according to the amount in parameters without synchronizing
+     * TODO : Change the bad names of theses 4 methods
+     * @param amount
+     */
+    function handleTimersIncrease(amount){
+        $scope.timer += amount;
+        $scope.actualGlobalTimer += amount;
+        $scope.timeForTimer = $scope.timer;
+        updateTimersInConductor($scope.roundNum, amount);
+    }
+
+    /**
+     * Decrease the timers according to the amount in parameters
+     * Used for the -30 button
+     * Stops and rerun the timers to stay synchronized so must be used when the timers are running
+     * TODO : Change the bad names of theses 4 methods
+     * @param amount
+     */
     $scope.decreaseTimer = function (amount) {
         stopIterationTimer(false);
+        handleTimersDecrease(amount);
+        var timerInfo = {"workshop":$scope.workshop._id,"duration":$scope.timeForTimer};
+        socket.emit('restart_timer', timerInfo);
+        runIterationTimer();
+    };
+
+    /**
+     * Decrease the timers according to the amount in parameters without synchronizing
+     * TODO : Change the bad names of theses 4 methods
+     * @param amount
+     */
+    function handleTimersDecrease(amount){
         $scope.actualGlobalTimer -= $scope.timer;
         var timerVal = $scope.timer - amount;
         if(timerVal < 0) timerVal = 0;
         $scope.timer = timerVal;
         $scope.actualGlobalTimer += $scope.timer;
         $scope.timeForTimer = $scope.timer;
-        var timerInfo = {"workshop":$scope.workshop._id,"duration":$scope.timeForTimer};
-        socket.emit('restart_timer', timerInfo);
-        runIterationTimer();
-    };
+        updateTimersInConductor($scope.roundNum, -(amount));
+    }
 
     function runIterationTimer(){
         timerInterval = $interval(function(){
