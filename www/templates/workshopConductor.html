@@ -1,4 +1,10 @@
-<ion-view view-title="Conducteur de l'atelier">
+<ion-modal-view class="modal">
+    <ion-header-bar class="bar-positive-900">
+        <h1 class="title" style="color: white">Conducteur de l'atelier</h1>
+        <div class="buttons">
+            <a class="button button-positive button-rounded button-block" ng-click="closeModal()">Fermer</a>
+        </div>
+    </ion-header-bar>
     <ion-content scroll="true">
         <div id="table">
             <div class="row header">
@@ -13,11 +19,15 @@
                 <div class="col" ng-bind-html="step.description"></div>
                 <div class="col col-20 text-center">
                     <div ng-if="$index < stepsLength -1">
-                    <button class="button button-positive button-rounded">+ 30 s</button>
-                    <button class="button button-positive button-rounded">- 30 s</button>
+                    <button class="button button-positive button-rounded" ng-click="updateIterationsTimes($index,30)">
+                        + 30 s
+                    </button>
+                    <button class="button button-positive button-rounded" ng-click="updateIterationsTimes($index,-30)">
+                        - 30 s
+                    </button>
                     </div>
                 </div>
             </div>
         </div>
     </ion-content>
-</ion-view>
+</ion-modal-view>

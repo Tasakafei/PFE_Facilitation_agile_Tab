@@ -84,16 +84,6 @@ angular.module('facilitation',
         controller: 'WorkshopCtrl'
       }
     }
-  })
-
-  .state('tab.workshopConductor', {
-    url: '/workshops/:workshopId/conductor',
-    views: {
-      'tab-workshop': {
-        templateUrl: 'templates/workshopConductor.html',
-        controller: 'WorkshopCtrl'
-      }
-    }
   });
 
 
