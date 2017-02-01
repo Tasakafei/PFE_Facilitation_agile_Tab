@@ -28,6 +28,8 @@ app.service('WorkshopsProvider', function ($http, $rootScope) {
                 alert("error : echec de la récupération des instances !  "+JSON.stringify(error));
             });
         });
+
+
     };
 
     delete $http.defaults.headers.common['X-Requested-With'];

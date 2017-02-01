@@ -2,7 +2,7 @@
 
 var app = angular.module('facilitation');
 
-app.controller('LoginCtrl', function($scope, Auth) {
+app.controller('LoginCtrl', function($scope, $state, Auth) {
 
     $scope.error = {};
     $scope.profile = {};
@@ -11,7 +11,7 @@ app.controller('LoginCtrl', function($scope, Auth) {
     $scope.fakeLogIn = function () {
         if($scope.user.login != undefined && $scope.user.password != undefined){
             Auth.fakeLogin($scope.user, function () {
-                window.location.replace("http://localhost:8100/#/tab/workshops");
+                $state.go('tab.workshopList');
             });
         }
     };
