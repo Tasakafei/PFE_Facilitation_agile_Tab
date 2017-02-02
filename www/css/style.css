@@ -199,6 +199,15 @@ a#conducteur {
     width: 100% ;
 }
 
+a#closeModal {
+    position: absolute;
+    top: -11px;
+    right: 5px;
+    max-width: initial;
+    width: initial;
+    line-height: 36px;
+}
+
 /* logging */
 @media (max-width: 767px) {
     div#logging {
