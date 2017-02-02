@@ -30,14 +30,14 @@
 }
 
 #workshop #first-row {
-    height: 50%;
+    height: 60%;
     overflow-y: hidden;
     padding: 0px 0px 0px 0px;
     margin-top: 0px;
 }
 
 #workshop .second-row {
-    height: 50%;
+    height: 40%;
     overflow-y: scroll;
     padding: 0px 0px 0px 0px;
     margin-top: 0px;
@@ -81,6 +81,15 @@ div#global-timer-in {
 
 #workshop .item.item-text-wrap {
     padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+#first-row .item.item-divider {
+    padding-bottom: 0px;
+}
+
+#first-row ol, #first-row ul {
+    margin: 5px;
 }
 
 #workshop #first-row-in {
@@ -96,7 +105,7 @@ div#actual-iteration::-webkit-scrollbar {
 }
 
 div#actual-iteration {
-    max-height: 75%;
+    max-height: 70%;
     overflow-y: scroll;
 }
 
@@ -106,6 +115,17 @@ div#actual-iteration {
 
 #first-row-in .col.col-80::-webkit-scrollbar {
     display: none;
+}
+
+a#conducteur {
+    padding: 10px 10px;
+    min-height: 0;
+    height: initial;
+    margin: 0;
+    letter-spacing: initial;
+    line-height: 1;
+    white-space: initial;
+    margin-top: 10px;
 }
 
 /* Workshop list */
@@ -178,3 +198,18 @@ div#actual-iteration {
     right: 0 ;
     width: 100% ;
 }
+
+/* logging */
+@media (max-width: 767px) {
+    div#logging {
+        max-width: 100% !important;
+        -webkit-box-flex: 1;
+        -webkit-flex: 1;
+        -moz-box-flex: 1;
+        -moz-flex: 1;
+        -ms-flex: 1;
+        flex: 1;
+        margin-left: initial;
+    }
+}
+
