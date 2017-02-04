@@ -10,11 +10,13 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
     $scope.doneWorkshop = false;
     $scope.isLate = false;
 
-    $ionicModal.fromTemplateUrl('../../templates/workshopConductor.html', {
+    $ionicModal.fromTemplateUrl('templates/workshopConductor.html', {
         scope: $scope,
         animation: 'slide-in-up'
     }).then(function(modal) {
         $scope.modal = modal;
+    },function (error) {
+        alert(JSON.stringify(error));
     });
 
     $scope.openModal = function() {
