@@ -4,6 +4,22 @@
         <div class="buttons">
             <a id="closeModal" class="button button-positive button-rounded button-block" ng-click="closeModal()">Fermer</a>
         </div>
+        <div class="timer-in-conductor">
+            <span>Chronomètre global :</span>
+            <span ng-if="!isLate">{{humanizeDurationTimer(theoreticalGlobalTimer,'s')}}</span>
+            <span ng-if="isLate">
+                <span>{{humanizeDurationTimer(overallTime,'s')}} </span>
+                <span style="color: #ff1212;">+ {{humanizeDurationTimer(theoreticalGlobalTimer,'s')}}</span>
+            </span>
+            <br/>
+            <span>Chronomètre global actuel :</span>
+            <span ng-if="actualGlobalTimer > theoreticalGlobalTimer">
+                <span style="color: #ff1212;">{{humanizeDurationTimer(actualGlobalTimer,'s')}} (+ {{humanizeDurationTimer(actualGlobalTimer - theoreticalGlobalTimer,'s')}})</span>
+            </span>
+            <span ng-if="actualGlobalTimer <= theoreticalGlobalTimer">
+                <span style="color: #21ff5f;">{{humanizeDurationTimer(actualGlobalTimer,'s')}}</span>
+            </span>
+        </div>
     </ion-header-bar>
     <ion-content scroll="true">
         <div id="table">
@@ -59,10 +75,10 @@
                 <div class="col col-20 text-center no-padding">
                     <div ng-if="roundNum >= (i+1)" class="stepDone">
                         <div ng-if="$index < stepsLength -1">
-                            <button class="button button-disabled button-rounded" ng-click="updateIterationsTimes($index,30)" style="margin-bottom: 5px;   width: 84px; padding: 0 20px;">
+                            <button class="button button-disabled button-rounded" ng-click="updateIterationsTimes($index,30)" style="margin-bottom: 5px;   width: 90px; padding: 0 20px;">
                                 + 30 s
                             </button>
-                            <button class="button button-disabled button-rounded" ng-click="updateIterationsTimes($index,-30)" style="  width: 84px; padding: 0 20px;">
+                            <button class="button button-disabled button-rounded" ng-click="updateIterationsTimes($index,-30)" style="  width: 90px; padding: 0 20px;">
                                 - 30 s
                             </button>
                         </div>
@@ -70,20 +86,20 @@
                     <div ng-if="roundNum == (i)" class="backgroundStepColor">
                         <div ng-if="actualGlobalTimer > theoreticalGlobalTimer" class="currentStepLate">
                             <div ng-if="$index < stepsLength -1">
-                                <button class="button button-positive button-rounded" ng-click="updateIterationsTimes($index,30)" style="margin-bottom: 5px;   width: 84px; padding: 0 20px;">
+                                <button class="button button-positive button-rounded" ng-click="updateIterationsTimes($index,30)" style="margin-bottom: 5px;   width: 90px; padding: 0 20px;">
                                     + 30 s
                                 </button>
-                                <button class="button button-positive button-rounded" ng-click="updateIterationsTimes($index,-30)" style="  width: 84px; padding: 0 20px;">
+                                <button class="button button-positive button-rounded" ng-click="updateIterationsTimes($index,-30)" style="  width: 90px; padding: 0 20px;">
                                     - 30 s
                                 </button>
                             </div>
                         </div>
                         <div ng-if="actualGlobalTimer <= theoreticalGlobalTimer" class="padding-5">
                             <div ng-if="$index < stepsLength -1">
-                                <button class="button button-positive button-rounded" ng-click="updateIterationsTimes($index,30)" style="margin-bottom: 5px;   width: 84px; padding: 0 20px;">
+                                <button class="button button-positive button-rounded" ng-click="updateIterationsTimes($index,30)" style="margin-bottom: 5px;   width: 90px; padding: 0 20px;">
                                     + 30 s
                                 </button>
-                                <button class="button button-positive button-rounded" ng-click="updateIterationsTimes($index,-30)" style="  width: 84px; padding: 0 20px;">
+                                <button class="button button-positive button-rounded" ng-click="updateIterationsTimes($index,-30)" style="  width: 90px; padding: 0 20px;">
                                     - 30 s
                                 </button>
                             </div>
@@ -92,20 +108,20 @@
                     <div ng-if="roundNum < (i)" class="backgroundStepColor">
                         <div ng-if="actualGlobalTimer > theoreticalGlobalTimer" class="stepLate">
                             <div ng-if="$index < stepsLength -1">
-                                <button class="button button-positive button-rounded" ng-click="updateIterationsTimes($index,30)" style="margin-bottom: 5px;   width: 84px; padding: 0 20px;">
+                                <button class="button button-positive button-rounded" ng-click="updateIterationsTimes($index,30)" style="margin-bottom: 5px;   width: 90px; padding: 0 20px;">
                                     + 30 s
                                 </button>
-                                <button class="button button-positive button-rounded" ng-click="updateIterationsTimes($index,-30)" style="  width: 84px; padding: 0 20px;">
+                                <button class="button button-positive button-rounded" ng-click="updateIterationsTimes($index,-30)" style="  width: 90px; padding: 0 20px;">
                                     - 30 s
                                 </button>
                             </div>
                         </div>
                         <div ng-if="actualGlobalTimer <= theoreticalGlobalTimer" class="stepInTime">
                             <div ng-if="$index < stepsLength -1">
-                                <button class="button button-positive button-rounded" ng-click="updateIterationsTimes($index,30)" style="margin-bottom: 5px;   width: 84px; padding: 0 20px;">
+                                <button class="button button-positive button-rounded" ng-click="updateIterationsTimes($index,30)" style="margin-bottom: 5px;   width: 90px; padding: 0 20px;">
                                     + 30 s
                                 </button>
-                                <button class="button button-positive button-rounded" ng-click="updateIterationsTimes($index,-30)" style="  width: 84px; padding: 0 20px;">
+                                <button class="button button-positive button-rounded" ng-click="updateIterationsTimes($index,-30)" style="  width: 90px; padding: 0 20px;">
                                     - 30 s
                                 </button>
                             </div>

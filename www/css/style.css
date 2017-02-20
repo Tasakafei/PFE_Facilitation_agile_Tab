@@ -225,6 +225,7 @@ a#closeModal {
 
 .stepDone {
     background-color: lightgrey;
+    color: grey;
     height: 100%;
     padding: 5px;
 }
@@ -232,6 +233,7 @@ a#closeModal {
 .stepDoneText {
     padding: 5px;
     background-color: lightgrey;
+    color: grey;
 }
 
 .stepLate {
@@ -258,6 +260,12 @@ a#closeModal {
 
 .padding-5 {
     padding: 5px;
+}
+
+.timer-in-conductor {
+    font-size: 14px;
+    margin-left: 10px;
+    margin-top: 2px;
 }
 
 /* logging */
