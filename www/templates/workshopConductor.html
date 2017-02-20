@@ -46,7 +46,7 @@
                     </div>
                 </div>
                 <!-- 3rd col -->
-                <div ng-if="roundNum >= (i+1)" class="col stepDoneText no-padding" ng-bind-html="step.description"></div>
+                <div ng-if="roundNum >= (i+1)" class="col stepDoneText" ng-bind-html="step.description"></div>
                 <div ng-if="roundNum == (i)" class="col no-padding">
                     <div ng-if="actualGlobalTimer > theoreticalGlobalTimer" class="currentStepLate" ng-bind-html="step.description"></div>
                     <div ng-if="actualGlobalTimer <= theoreticalGlobalTimer" class="padding-5" ng-bind-html="step.description"></div>
