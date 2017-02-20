@@ -87,8 +87,14 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
         //Add word "minutes" to duration
         for (var i = 0; i < $scope.workshop.steps.length; i++) {
             if ($scope.workshop.steps[i].duration.theorical) {
-                $scope.workshop.steps[i].duration.theoricalMinutes =
-                    $scope.workshop.steps[i].duration.theorical + " minutes";
+                //Output format
+                var theoricalMinutes = [];
+                var d = new Date( $scope.workshopStepsDuration[i]/60 * 60000); //en miniseconde
+                var time = d.toUTCString().split(" ");
+                time = time[4].split(":");
+                theoricalMinutes[i] =  time[1] +":" + time[2];
+
+                $scope.workshop.steps[i].duration.theoricalMinutes = theoricalMinutes[i] + " minutes";
             }
         }
 
