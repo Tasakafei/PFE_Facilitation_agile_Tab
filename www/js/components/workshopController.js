@@ -201,6 +201,21 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
         socket.emit('join_room', $scope.workshop._id);
     };
 
+    //Delete an iteration on swipe
+    $scope.swipeToDelete = function(elem) {
+
+        var elems = document.getElementsByClassName("step-"+elem);
+        var buttons = elems[3].getElementsByClassName("button-positive");
+
+        for(var i = 0; i < elems.length; i++) {
+            elems[i].classList.toggle("stepSwipe");
+        }
+
+        for(i = 0; i < buttons.length; i++) {
+            buttons[i].classList.toggle("hideButton30");
+        }
+    };
+
     // Ensure that the timer is synchronized
     socket.on('join_success', function(msg){
         $scope.timerIsSync = true;
