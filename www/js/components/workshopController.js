@@ -89,12 +89,9 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
             if ($scope.workshop.steps[i].duration.theorical) {
                 //Output format
                 var theoricalMinutes = [];
-                var d = new Date( $scope.workshopStepsDuration[i]/60 * 60000); //en miniseconde
-                var time = d.toUTCString().split(" ");
-                time = time[4].split(":");
-                theoricalMinutes[i] =  time[1] +":" + time[2];
+                theoricalMinutes[i] = formatTime($scope.workshopStepsDuration[i]/60 * 60000);
 
-                $scope.workshop.steps[i].duration.theoricalMinutes = theoricalMinutes[i] + " minutes";
+                $scope.workshop.steps[i].duration.theoricalMinutes = theoricalMinutes[i];
             }
         }
 
@@ -165,12 +162,22 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
 
         //Output format
         var theoricalMinutes = [];
-        var d = new Date( $scope.workshopStepsDuration[iterationNb]/60 * 60000); //en miniseconde
-        var time = d.toUTCString().split(" ");
-        time = time[4].split(":");
-        theoricalMinutes[iterationNb] =  time[1] +":" + time[2];
+        theoricalMinutes[iterationNb] =  formatTime($scope.workshopStepsDuration[iterationNb]/60 * 60000);
 
-        $scope.workshop.steps[iterationNb].duration.theoricalMinutes = theoricalMinutes[iterationNb] + " minutes";
+        var timeVariationDuration = $scope.workshopStepsDuration[iterationNb]/60 * 60000 - parseInt($scope.workshop.steps[iterationNb].duration.theorical) * 60000;
+        var timeVariationPresentation;
+
+        if(timeVariationDuration > 0) {
+            timeVariationPresentation = "(+"+TimerService.humanizeDurationTimer(timeVariationDuration, "ms")+")";
+        } else if(timeVariationDuration < 0) {
+            timeVariationDuration = parseInt($scope.workshop.steps[iterationNb].duration.theorical) * 60000 - $scope.workshopStepsDuration[iterationNb]/60 * 60000;
+            timeVariationPresentation = "(-"+TimerService.humanizeDurationTimer(timeVariationDuration, "ms")+")";
+        } else {
+            timeVariationPresentation = "";
+        }
+
+        timeVariationPresentation = timeVariationPresentation.replace(/\s+/g, '');
+        $scope.workshop.steps[iterationNb].duration.theoricalMinutes = theoricalMinutes[iterationNb] + " " + timeVariationPresentation;
     }
 
     // Filter the steps to retrieve only the durations
@@ -410,10 +417,18 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
         }
     }
 
-    // This function helps to display the time in a correct way in the center of the timer
+    // This function helps to display the time in a correct way in the center of the timer (with "m" & "s" format)
     $scope.humanizeDurationTimer = function(input, units) {
         return TimerService.humanizeDurationTimer(input, units);
     };
+
+    function formatTime(millis) {
+        var d = new Date(millis);
+        var time = d.toUTCString().split(" ");
+        time = time[4].split(":");
+        var formattedTime =  time[1] +":" + time[2];
+        return formattedTime;
+    }
 
 
     //Calc the height of the next step dynamically
