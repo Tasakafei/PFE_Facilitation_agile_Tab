@@ -28,8 +28,21 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
 
 
     var timerInterval, globalTimerInterval, ispaused = false;
-    var audio;
+    var isServe = (ionic.Platform.isAndroid() || ionic.Platform.isIOS() || ionic.Platform.isWindowsPhone())?false:true;
+    var alarmUrl = "sound/ALARM-DANGER-WARNING_Sound_Effect.mp3";
+    var media;
 
+    function initMediaAudio() {
+        console.log(JSON.stringify(isServe));
+        if(isServe){
+            if(media == undefined) media = new Audio("../../"+alarmUrl)
+        } else {
+            if(media == undefined) media = new Media("/android_asset/www/"+alarmUrl);
+        }
+
+    }
+
+    initMediaAudio();
 
     // Automatically retrieve the workshop instance when arriving in this controller
     WorkshopsProvider.getWorkshopById($stateParams.workshopId, function (workshopResult) {
@@ -330,8 +343,7 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
                 $scope.timerIsSync = false;
                 $scope.iterationRunning = false;
                 $scope.continueToNextIteration = true;
-                audio = new Audio('../../sound/ALARM-DANGER-WARNING_Sound_Effect.mp3');
-                audio.play();
+                media.play();
                 console.log("emit start sound");
                 socket.emit('start_sound', $scope.workshop._id);
                 // Just a fix for the global timer
@@ -341,7 +353,7 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
     };
 
     $scope.stopSound = function() {
-        audio.pause();
+        media.pause();
         socket.emit('stop_sound', $scope.workshop._id);
         nextIteration();
         $scope.continueToNextIteration = false;
