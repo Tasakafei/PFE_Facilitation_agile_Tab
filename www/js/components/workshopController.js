@@ -2,7 +2,8 @@
 
 var app = angular.module('facilitation');
 
-app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $interval, $ionicModal, socket, TimerService, WorkshopsProvider, ViewAccessService) {
+app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $interval, $ionicModal,
+                                        socket, TimerService, WorkshopsProvider, ViewAccessService) {
     $scope.workshop = {};
     $scope.timerIsSync = null;
     $scope.iterationRunning = false;
@@ -28,20 +29,19 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
 
 
     var timerInterval, globalTimerInterval, ispaused = false;
-    var isServe = (ionic.Platform.isAndroid() || ionic.Platform.isIOS() || ionic.Platform.isWindowsPhone())?false:true;
+    var isServe = (!(ionic.Platform.isAndroid() || ionic.Platform.isIOS() || ionic.Platform.isWindowsPhone()));
     var alarmUrl = "sound/ALARM-DANGER-WARNING_Sound_Effect.mp3";
     var media;
 
+    // Initialize the media which plays the alarm sound, used to develop using as well ionic serve as ionic run [platform]
     function initMediaAudio() {
-        console.log(JSON.stringify(isServe));
         if(isServe){
             if(media == undefined) media = new Audio("../../"+alarmUrl)
         } else {
             if(media == undefined) media = new Media("/android_asset/www/"+alarmUrl);
         }
-
     }
-
+    // Calling the init media function
     initMediaAudio();
 
     // Automatically retrieve the workshop instance when arriving in this controller
@@ -49,7 +49,7 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
         $scope.workshop = workshopResult.data;
 
         /* ***** Initializing data for the iteration view ***** */
-        $scope.workshopStepsDuration = filterWorkshopDurationSteps(workshopResult.data);//.filter(function (duration) {return duration > -1;});
+        $scope.workshopStepsDuration = filterWorkshopDurationSteps(workshopResult.data);
         $scope.overallTime = $scope.workshopStepsDuration.reduce(
             function (a, b) {
                 if(b != -1) return a+b;
@@ -96,6 +96,8 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
         }
 
     });
+
+    /*********************************************** CONDUCTOR ********************************************************/
 
     $scope.initializeConductor = function () {
         ViewAccessService.accessView("conductor");
@@ -164,20 +166,23 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
         var theoricalMinutes = [];
         theoricalMinutes[iterationNb] =  formatTime($scope.workshopStepsDuration[iterationNb]/60 * 60000);
 
-        var timeVariationDuration = $scope.workshopStepsDuration[iterationNb]/60 * 60000 - parseInt($scope.workshop.steps[iterationNb].duration.theorical) * 60000;
+        var timeVariationDuration = $scope.workshopStepsDuration[iterationNb]/60 * 60000
+            - parseInt($scope.workshop.steps[iterationNb].duration.theorical) * 60000;
         var timeVariationPresentation;
 
         if(timeVariationDuration > 0) {
             timeVariationPresentation = "(+"+TimerService.humanizeDurationTimer(timeVariationDuration, "ms")+")";
         } else if(timeVariationDuration < 0) {
-            timeVariationDuration = parseInt($scope.workshop.steps[iterationNb].duration.theorical) * 60000 - $scope.workshopStepsDuration[iterationNb]/60 * 60000;
+            timeVariationDuration = parseInt($scope.workshop.steps[iterationNb].duration.theorical) * 60000
+                - $scope.workshopStepsDuration[iterationNb]/60 * 60000;
             timeVariationPresentation = "(-"+TimerService.humanizeDurationTimer(timeVariationDuration, "ms")+")";
         } else {
             timeVariationPresentation = "";
         }
 
         timeVariationPresentation = timeVariationPresentation.replace(/\s+/g, '');
-        $scope.workshop.steps[iterationNb].duration.theoricalMinutes = theoricalMinutes[iterationNb] + " " + timeVariationPresentation;
+        $scope.workshop.steps[iterationNb].duration.theoricalMinutes =
+            theoricalMinutes[iterationNb] + " " + timeVariationPresentation;
     }
 
     // Filter the steps to retrieve only the durations
@@ -187,6 +192,8 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
             else return -1;
         });
     };
+
+    /*********************************************** TIMER SYNC *******************************************************/
 
     // Used to join the wanted instance
     $scope.synchronizeTimer = function(){
@@ -207,7 +214,7 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
         endOfWorkshop();
     });
 
-    // TODO : MOVE TO SERVICE ?
+    /******************************************** TIMERS AND ITERATIONS ***********************************************/
 
     // Initialize the values for the iteration timer (plugin dependent)
     function initializeIterationTimer(val) {
@@ -416,6 +423,9 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
             globalTimerInterval = undefined;
         }
     }
+
+    /************************************************* OTHERS *********************************************************/
+
 
     // This function helps to display the time in a correct way in the center of the timer (with "m" & "s" format)
     $scope.humanizeDurationTimer = function(input, units) {
