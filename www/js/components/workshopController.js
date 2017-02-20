@@ -141,8 +141,15 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
         if($scope.workshopStepsDuration[iterationNb] < 0) {
             $scope.workshopStepsDuration[iterationNb] = 0;
         }
-        $scope.workshop.steps[iterationNb].duration.theoricalMinutes =
-            $scope.workshopStepsDuration[iterationNb]/60 + " minutes";
+
+        //Output format
+        var theoricalMinutes = [];
+        var d = new Date( $scope.workshopStepsDuration[iterationNb]/60 * 60000); //en miniseconde
+        var time = d.toUTCString().split(" ");
+        time = time[4].split(":");
+        theoricalMinutes[iterationNb] =  time[1] +":" + time[2];
+
+        $scope.workshop.steps[iterationNb].duration.theoricalMinutes = theoricalMinutes[iterationNb] + " minutes";
     }
 
     // Filter the steps to retrieve only the durations
