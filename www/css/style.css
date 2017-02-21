@@ -277,6 +277,10 @@ a#closeModal {
     display: none !important;
 }
 
+.popup-head h3 {
+    font-size: 20px;
+}
+
 /* logging */
 @media (max-width: 767px) {
     div#logging {

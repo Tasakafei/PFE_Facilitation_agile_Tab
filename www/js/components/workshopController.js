@@ -3,7 +3,7 @@
 var app = angular.module('facilitation');
 
 app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $interval, $ionicModal,
-                                        socket, TimerService, WorkshopsProvider, ViewAccessService) {
+                                        socket, TimerService, WorkshopsProvider, ViewAccessService, $ionicPopup) {
     $scope.workshop = {};
     $scope.timerIsSync = null;
     $scope.iterationRunning = false;
@@ -116,7 +116,7 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
      */
     $scope.updateIterationsTimes = function (iterationNb, value) {
         // If previous iteration selected, do nothing
-        if(iterationNb >= $scope.roundNum){
+        if(iterationNb >= $scope.roundNum) {
             // TODO : Condition to remove in the future to accept empty iterations
             if($scope.workshopStepsDuration[iterationNb] != -1){
                 // Modifying current iteration data
@@ -156,10 +156,18 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
      * @param iterationNb   The iteration timer to update
      * @param value         The value to add to the timer (can be negative)
      */
-    function updateTimersInConductor(iterationNb, value){
+    function updateTimersInConductor(iterationNb, value) {
+
         $scope.workshopStepsDuration[iterationNb] += value;
         if($scope.workshopStepsDuration[iterationNb] < 0) {
             $scope.workshopStepsDuration[iterationNb] = 0;
+        }
+
+        //Check if the user double the time allowed or if he reduce it too much
+        if($scope.workshopStepsDuration[iterationNb] == ($scope.workshop.steps[iterationNb].duration.theorical * 60 * 2) && (value > 0)) {
+            $scope.showAlert("Vous avez doublé le temps alloué à cette itération.");
+        } else if ($scope.workshopStepsDuration[iterationNb] == ($scope.workshop.steps[iterationNb].duration.theorical * 60 / 2) && (value < 0)) {
+            $scope.showAlert("Vous avez divisé par 2 le temps alloué à cette itération.");
         }
 
         //Output format
@@ -183,7 +191,15 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
         timeVariationPresentation = timeVariationPresentation.replace(/\s+/g, '');
         $scope.workshop.steps[iterationNb].duration.theoricalMinutes =
             theoricalMinutes[iterationNb] + " " + timeVariationPresentation;
+
     }
+
+    $scope.showAlert = function(content) {
+        $ionicPopup.alert({
+            title: 'Attention !',
+            template: content
+        });
+    };
 
     // Filter the steps to retrieve only the durations
     function filterWorkshopDurationSteps(workshop){
