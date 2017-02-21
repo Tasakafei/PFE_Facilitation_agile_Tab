@@ -31,7 +31,7 @@ angular.module('facilitation')
                 }, function(err) {
                     console.log("ERROR according to the login func");
                     console.log(JSON.stringify(err));
-                    return cb(err.data);
+                    return cb(err);
                 });
             },
 

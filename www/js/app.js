@@ -15,6 +15,7 @@ angular.module('facilitation',
       'ngResource',
       'ngSanitize',
       'http-auth-interceptor',
+      'ui.rCalendar',
     ])
 
 .run(function($ionicPlatform, socket, $rootScope, $location) {
@@ -84,6 +85,16 @@ angular.module('facilitation',
         controller: 'WorkshopCtrl'
       }
     }
+  })
+
+  .state('tab.agenda', {
+      url:'/agenda',
+      views: {
+          'tab-workshop': {
+              templateUrl: 'templates/agenda.html',
+              controller: 'AgendaCtrl'
+          }
+      }
   });
 
 

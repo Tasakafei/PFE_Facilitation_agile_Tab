@@ -10,7 +10,9 @@
     "robotodraft": "^1.1.0",
     "angular-cookies": "^1.6.1",
     "angular-resource": "^1.6.1",
-    "angular-http-auth": "^1.5.0"
+    "angular-http-auth": "^1.5.0",
+    "toastr": "^2.1.3",
+    "ionic-calendar": "^0.3.7"
   },
   "resolutions": {
     "angular-animate": "1.5.3",

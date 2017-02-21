@@ -47,4 +47,5 @@
         <splash density="port-xxxhdpi" src="resources/android/splash/drawable-port-xxxhdpi-screen.png" />
     </platform>
     <plugin name="cordova-plugin-media" spec="~2.4.1" />
+    <plugin name="cordova-plugin-x-toast" spec="~2.6.0" />
 </widget>

@@ -64,6 +64,8 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
         initializeIterationTimer($scope.workshopStepsDuration[$scope.roundNum]);
         initializeGlobalTimer($scope.overallTime);
 
+        console.log(JSON.stringify(workshop.steps));
+
         /* ***** Initializing data for the conductor view ***** */
         $scope.stepsLength = $scope.workshop.steps.length;
 
@@ -84,7 +86,7 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
         }
         $scope.timingArray = timingArray;
 
-        //Add word "minutes" to duration
+        //Formatting time
         for (var i = 0; i < $scope.workshop.steps.length; i++) {
             if ($scope.workshop.steps[i].duration.theorical) {
                 //Output format
@@ -98,15 +100,6 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
     });
 
     /*********************************************** CONDUCTOR ********************************************************/
-
-    $scope.initializeConductor = function () {
-        ViewAccessService.accessView("conductor");
-        ViewAccessService.getAccessTimes("conductor",function (nbAccess) {
-           if(nbAccess == 1){
-
-           }
-        });
-    };
 
     /**
      * Conductor : change the time of the selected iteration and propagate the changes to the others

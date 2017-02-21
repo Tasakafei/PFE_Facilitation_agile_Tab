@@ -11,7 +11,7 @@ app.controller('LoginCtrl', function($scope, $state, Auth) {
     $scope.fakeLogIn = function () {
         if($scope.user.login != undefined && $scope.user.password != undefined){
             Auth.fakeLogin($scope.user, function () {
-                $state.go('tab.workshopList');
+                $state.go('tab.agenda');
             });
         }
     };
