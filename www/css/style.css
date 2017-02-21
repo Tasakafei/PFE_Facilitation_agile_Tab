@@ -128,6 +128,14 @@ a#conducteur {
     margin-top: 10px;
 }
 
+#workshop #first-row .col-20 .item-divider h2 {
+    float: right;
+}
+
+#workshop #first-row .col-20 .item-divider a {
+    float: left;
+}
+
 /* Workshop list */
 .main-title {
    margin-left: 20px;

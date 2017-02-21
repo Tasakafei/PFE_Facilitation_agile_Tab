@@ -1,9 +1,5 @@
 <ion-modal-view class="modal">
     <ion-header-bar class="bar-positive-900">
-        <h1 class="title" style="color: white">Conducteur de l'atelier</h1>
-        <div class="buttons">
-            <a id="closeModal" class="button button-positive button-rounded button-block" ng-click="closeModal()">Fermer</a>
-        </div>
         <div class="timer-in-conductor">
             <span>Chronomètre global :</span>
             <span ng-if="!isLate">{{humanizeDurationTimer(theoreticalGlobalTimer,'s')}}</span>
@@ -19,6 +15,10 @@
             <span ng-if="actualGlobalTimer <= theoreticalGlobalTimer">
                 <span style="color: #21ff5f;">{{humanizeDurationTimer(actualGlobalTimer,'s')}}</span>
             </span>
+        </div>
+        <h1 class="title" style="color: white">Conducteur de l'atelier</h1>
+        <div class="buttons">
+            <a id="closeModal" class="button button-positive button-rounded button-block" ng-click="closeModal()">Fermer</a>
         </div>
     </ion-header-bar>
     <ion-content scroll="true">
