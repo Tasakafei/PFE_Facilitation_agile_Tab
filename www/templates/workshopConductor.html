@@ -24,6 +24,7 @@
     <ion-content scroll="true">
         <div id="table">
             <div class="row header">
+                <div class="col col-2 text-center"></div>
                 <div class="col col-10 text-center">Timing</div>
                 <div class="col col-10 text-center">Phase</div>
                 <div class="col text-center">Description</div>
@@ -31,93 +32,44 @@
             </div>
             <div class="row" ng-repeat="(i, step) in workshop.steps" on-swipe-right="swipeToDelete({{i}})" on-swipe-left="swipeToDelete({{i}})">
                 <!-- 1st col -->
-                <div class="col col-10 text-center no-padding step-{{i}}">
+                <div class="col col-2 text-center no-padding step-{{i}}">
                     <!-- If step is over -->
-                    <div ng-if="roundNum >= (i+1)" class="stepDone">{{timingArray[$index]}} </div>
+                    <div ng-if="roundNum >= (i+1)" class="stepDoneFirst line"></div>
                     <!-- Current step -->
-                    <div ng-if="roundNum == (i)" class="backgroundStepColor">
+                    <div ng-if="roundNum == (i)" class="backgroundStepColor line">
                         <!-- if we are late -->
-                        <div ng-if="actualGlobalTimer > theoreticalGlobalTimer" class="currentStepLate">{{timingArray[$index]}}</div>
+                        <div ng-if="actualGlobalTimer > theoreticalGlobalTimer" class="currentStepLate"></div>
                         <!-- if we are in time -->
-                        <div ng-if="actualGlobalTimer <= theoreticalGlobalTimer" class="padding-5">{{timingArray[$index]}}</div>
+                        <div ng-if="actualGlobalTimer <= theoreticalGlobalTimer" class="padding-5"></div>
                     </div>
                     <!-- Next steps -->
-                    <div ng-if="roundNum < (i)" class="backgroundStepColor">
+                    <div ng-if="roundNum < (i)" class="backgroundStepColor line">
                         <!-- if we are late -->
-                        <div ng-if="actualGlobalTimer > theoreticalGlobalTimer" class="stepLate">{{timingArray[$index]}}</div>
+                        <div ng-if="actualGlobalTimer > theoreticalGlobalTimer" class="stepLate"></div>
                         <!-- if we are in time -->
-                        <div ng-if="actualGlobalTimer <= theoreticalGlobalTimer" class="stepInTime">{{timingArray[$index]}}</div>
+                        <div ng-if="actualGlobalTimer <= theoreticalGlobalTimer" class="stepInTime"></div>
                     </div>
                 </div>
                 <!-- 2nd col -->
                 <div class="col col-10 text-center no-padding step-{{i}}">
-                    <div ng-if="roundNum >= (i+1)" class="stepDone">{{step.title}}<br />{{step.duration.theoricalMinutes}}</div>
-                    <div ng-if="roundNum == (i)" class="backgroundStepColor">
-                        <div ng-if="actualGlobalTimer > theoreticalGlobalTimer" class="currentStepLate">{{step.title}}<br />{{step.duration.theoricalMinutes}}</div>
-                        <div ng-if="actualGlobalTimer <= theoreticalGlobalTimer" class="padding-5">{{step.title}}<br />{{step.duration.theoricalMinutes}}</div>
-                    </div>
-                    <div ng-if="roundNum < (i)" class="backgroundStepColor">
-                        <div ng-if="actualGlobalTimer > theoreticalGlobalTimer" class="stepLate">{{step.title}}<br />{{step.duration.theoricalMinutes}}</div>
-                        <div ng-if="actualGlobalTimer <= theoreticalGlobalTimer" class="stepInTime">{{step.title}}<br />{{step.duration.theoricalMinutes}}</div>
-                    </div>
+                    <div ng-class="{'stepDone': roundNum >= (i+1)}">{{timingArray[$index]}}</div>
                 </div>
                 <!-- 3rd col -->
-                <div ng-if="roundNum >= (i+1)" class="col stepDoneText step-{{i}}" ng-bind-html="step.description"></div>
-                <div ng-if="roundNum == (i)" class="col no-padding step-{{i}}">
-                    <div ng-if="actualGlobalTimer > theoreticalGlobalTimer" class="currentStepLate" ng-bind-html="step.description"></div>
-                    <div ng-if="actualGlobalTimer <= theoreticalGlobalTimer" class="padding-5" ng-bind-html="step.description"></div>
+                <div class="col col-10 text-center no-padding step-{{i}}">
+                    <div ng-class="{'stepDone': roundNum >= (i+1)}">{{step.title}}<br />{{step.duration.theoricalMinutes}}</div>
                 </div>
-                <div ng-if="roundNum < (i)" class="col no-padding step-{{i}}">
-                    <div ng-if="actualGlobalTimer > theoreticalGlobalTimer" class="stepLate" ng-bind-html="step.description"></div>
-                    <div ng-if="actualGlobalTimer <= theoreticalGlobalTimer" class="stepInTime" ng-bind-html="step.description"></div>
-                </div>
-                <!-- 4rd col -->
+                <!-- 4th col -->
+                <div ng-class="{'stepDoneText': roundNum >= (i+1)}" class="col step-{{i}}" ng-bind-html="step.description"></div>
+                <!-- 5th col -->
                 <div class="col col-20 text-center no-padding step-{{i}}">
-                    <div ng-if="roundNum >= (i+1)" class="stepDone">
-                    </div>
-                    <div ng-if="roundNum == (i)" class="backgroundStepColor">
-                        <div ng-if="actualGlobalTimer > theoreticalGlobalTimer" class="currentStepLate">
-                            <div ng-if="$index < stepsLength -1">
-                                <button class="button button-positive button-rounded" ng-click="updateIterationsTimes($index,30)" style="margin-bottom: 5px;   width: 90px; padding: 0 20px;">
-                                    + 30 s
-                                </button>
-                                <button class="button button-positive button-rounded" ng-click="updateIterationsTimes($index,-30)" style="  width: 90px; padding: 0 20px;">
-                                    - 30 s
-                                </button>
-                            </div>
-                        </div>
-                        <div ng-if="actualGlobalTimer <= theoreticalGlobalTimer" class="padding-5">
-                            <div ng-if="$index < stepsLength -1">
-                                <button class="button button-positive button-rounded" ng-click="updateIterationsTimes($index,30)" style="margin-bottom: 5px;   width: 90px; padding: 0 20px;">
-                                    + 30 s
-                                </button>
-                                <button class="button button-positive button-rounded" ng-click="updateIterationsTimes($index,-30)" style="  width: 90px; padding: 0 20px;">
-                                    - 30 s
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <div ng-if="roundNum < (i)" class="backgroundStepColor">
-                        <div ng-if="actualGlobalTimer > theoreticalGlobalTimer" class="stepLate">
-                            <div ng-if="$index < stepsLength -1">
-                                <button class="button button-positive button-rounded" ng-click="updateIterationsTimes($index,30)" style="margin-bottom: 5px;   width: 90px; padding: 0 20px;">
-                                    + 30 s
-                                </button>
-                                <button class="button button-positive button-rounded" ng-click="updateIterationsTimes($index,-30)" style="  width: 90px; padding: 0 20px;">
-                                    - 30 s
-                                </button>
-                            </div>
-                        </div>
-                        <div ng-if="actualGlobalTimer <= theoreticalGlobalTimer" class="stepInTime">
-                            <div ng-if="$index < stepsLength -1">
-                                <button class="button button-positive button-rounded" ng-click="updateIterationsTimes($index,30)" style="margin-bottom: 5px;   width: 90px; padding: 0 20px;">
-                                    + 30 s
-                                </button>
-                                <button class="button button-positive button-rounded" ng-click="updateIterationsTimes($index,-30)" style="  width: 90px; padding: 0 20px;">
-                                    - 30 s
-                                </button>
-                            </div>
-                        </div>
+                    <div ng-if="roundNum >= (i+1)" class="stepDone"></div>
+                    <div ng-if="$index < stepsLength -1" class="padding-5">
+                        <button class="button button-positive button-rounded" ng-click="updateIterationsTimes($index,30)" style="margin-bottom: 5px;   width: 90px; padding: 0 20px;">
+                            + 30 s
+                        </button>
+                        <button class="button button-positive button-rounded" ng-click="updateIterationsTimes($index,-30)" style="  width: 90px; padding: 0 20px;">
+                            - 30 s
+                        </button>
                     </div>
                 </div>
             </div>

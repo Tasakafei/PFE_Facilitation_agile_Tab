@@ -233,6 +233,11 @@ a#closeModal {
     padding: 5px;
 }
 
+.stepDoneFirst {
+    background-color: grey;
+    height: 100%;
+}
+
 .stepDoneText {
     padding: 5px;
     background-color: lightgrey;
@@ -240,26 +245,30 @@ a#closeModal {
 }
 
 .stepLate {
-    background-color: rgb(255, 151, 150);
+    background-color: #e00000;
     height: 100%;
     padding: 5px;
 }
 
 .stepInTime {
-    background-color: rgba(99, 255, 143, 0.51);  /*#63ff8f*/
+    background-color: #228B22;
     height: 100%;
     padding: 5px;
 }
 
 .currentStepLate {
-    background-color: #ffc66e;
+    background-color: #ffa704;
     height: 100%;
     padding: 5px;
 }
 
-.stepSwipe div {
+.stepSwipe {
     background-color: lightgrey;
     color: grey;
+}
+
+.stepSwipe div.line {
+    background-color: grey;
 }
 
 .stepSwipe div .button-positive {
@@ -287,6 +296,16 @@ a#closeModal {
 
 .popup-head h3 {
     font-size: 20px;
+}
+
+.col-2 {
+    -webkit-box-flex: 0;
+    -webkit-flex: 0 0 2%;
+    -moz-box-flex: 0;
+    -moz-flex: 0 0 2%;
+    -ms-flex: 0 0 2%;
+    flex: 0 0 2%;
+    max-width: 2%;
 }
 
 /* logging */
