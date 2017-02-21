@@ -308,6 +308,29 @@ a#closeModal {
     max-width: 2%;
 }
 
+#table .col-2 {
+    border: none;
+}
+
+#table .header .col-2 {
+    background: none;
+}
+
+#table .row:last-child .col-2 {
+    border-bottom: none;
+}
+
+.chevron {
+    display: none;
+    position: absolute;
+}
+
+.chevron img {
+    width: 50px;
+    position: relative;
+    left: -15px;
+}
+
 /* logging */
 @media (max-width: 767px) {
     div#logging {

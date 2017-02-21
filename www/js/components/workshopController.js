@@ -209,6 +209,49 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
         });
     };
 
+    //TODO : Correct this shit, it's not working
+    function moveChevron() {
+        //We are late
+        if($scope.actualGlobalTimer > $scope.theoreticalGlobalTimer) {
+
+            var accumulatorReal = 0;
+            for (var i = 0; i < $scope.workshop.steps.length; i++) {
+
+                //Real time steps accumulation
+                if($scope.workshopStepsDuration[i] != undefined)
+                    accumulatorReal += $scope.workshopStepsDuration[i];
+
+                //Real final time
+                var finalTime = $scope.actualGlobalTimer - $scope.theoreticalGlobalTimer;
+                finalTime = $scope.theoreticalGlobalTimer - finalTime;
+
+                if( accumulatorReal > finalTime ) {
+                    var elem = document.getElementsByClassName("step-"+(i))[0];
+
+                    //Clean other chevron
+                    for(var y = 0; y < document.getElementsByClassName("chevron").length; y++) {
+                        document.getElementsByClassName("chevron")[y].style.display = "none";
+                    }
+
+                    //Add chevron
+                    elem.getElementsByClassName("chevron")[0].style.display = "block";
+                    break;
+                }
+            }
+        } //We are in time
+        else  {
+
+            //Clean other chevron
+            for(var y = 0; y < document.getElementsByClassName("chevron").length; y++) {
+                document.getElementsByClassName("chevron")[y].style.display = "none";
+            }
+
+            //Add chevron at the end
+            var elem = document.getElementsByClassName("step-"+($scope.workshop.steps.length -1))[0];
+            elem.getElementsByClassName("chevron")[0].style.display = "block";
+        }
+    }
+
     /*********************************************** TIMER SYNC *******************************************************/
 
     // Used to join the wanted instance
@@ -221,7 +264,7 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
     $scope.swipeToDelete = function(elem) {
 
         var elems = document.getElementsByClassName("step-" + elem);
-        var buttons = elems[4].getElementsByClassName("button-positive");
+        var buttons = elems[5].getElementsByClassName("button-positive");
 
         //Check if the step is not already over
         if (!elems[0].getElementsByClassName('stepDoneFirst')[0]) {
@@ -447,6 +490,8 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
                 }
             }
 
+            //Check if we need to move the chevron
+            moveChevron();
 
         }, 1000);
     }
