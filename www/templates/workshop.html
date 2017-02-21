@@ -42,7 +42,7 @@
                         <span>{{humanizeDurationTimer(overallTime,'s')}} </span>
                         <span style="color: red;">+ {{humanizeDurationTimer(theoreticalGlobalTimer,'s')}}</span>
                     </div>
-                        <h3>Chrono global actuel</h3>
+                        <h3>Chronomètre global actuel</h3>
                     <div ng-if="actualGlobalTimer > theoreticalGlobalTimer">
                         <span style="color: red;">{{humanizeDurationTimer(actualGlobalTimer,'s')}} (+ {{humanizeDurationTimer(actualGlobalTimer - theoreticalGlobalTimer,'s')}})</span>
                     </div>
@@ -77,14 +77,19 @@
                     <div ng-if="timerIsSync && iterationRunning && !doneWorkshop">
                         <div class="row">
                             <div class="col">
-                                <button class="button button-positive button-rounded button-block" ng-click="increaseTimer(30)">
+                                <button class="button button-positive button-rounded" ng-click="increaseTimer(30)">
                                     + 30 s
+                                </button>
+                            </div>
+                            <div id="nextIteration" class="col" ng-click="decreaseTimer(timer)">
+                                <button class="button button-positive button-rounded">
+                                   Terminer l'itération
                                 </button>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col">
-                                <button class="button button-positive button-rounded button-block" ng-click="decreaseTimer(30)">
+                                <button style="width: 107.88px" class="button button-positive button-rounded" ng-click="decreaseTimer(30)">
                                     - 30 s
                                 </button>
                             </div>

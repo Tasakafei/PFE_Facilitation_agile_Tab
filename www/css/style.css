@@ -142,6 +142,11 @@ a#conducteur {
     float: left;
 }
 
+#nextIteration {
+    position: relative;
+    top: 26px
+}
+
 /* Workshop list */
 .main-title {
    margin-left: 20px;
