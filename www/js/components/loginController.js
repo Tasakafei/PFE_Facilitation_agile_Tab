@@ -25,18 +25,7 @@ app.controller('LoginCtrl', function($scope, $state, Auth) {
                 $scope.errors = {};
 
                 if (!err) {
-                    //$location.path('/');
-
-                    alert('Vous avez bien été connecté !');
-                    /*$scope.$emit('notify', {
-                        type: 'success',
-                        title: 'Vous avez bien été connecté !'
-                    });*/
-
-                    //Redirection with notif
-                    // TODO : Replace hardcoded url
-                    window.location.replace("http://localhost:8100/#/tab/workshops");
-
+                    $state.go('tab.workshopList');
                 } else {
                     angular.forEach(err.errors, function(error, field) {
                         console.log("ERROR : " + error + " : "+ field);
