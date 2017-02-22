@@ -297,6 +297,7 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
                     $scope.workshop.steps[elem].skiped = false;
 
                     media.pause();
+                    socket.emit('stop_sound', $scope.workshop._id);
                     $scope.continueToNextIteration = false;
                     $scope.iterationRunning = tmpIterationRunning;
                     $scope.timerIsSync = true;
@@ -618,5 +619,4 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
 
     }
     putNextStepMaxHeight();
-
 });
