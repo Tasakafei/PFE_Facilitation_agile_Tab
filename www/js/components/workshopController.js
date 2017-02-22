@@ -308,9 +308,18 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
                     $scope.updateIterationsTimes(elem, $scope.workshop.steps[elem].duration.theorical * 60);
                     $scope.workshop.steps[elem].skiped = false;
 
-                    //Display the right text
-                    if( $scope.nextStep._id !=  $scope.workshop.steps[elem]._id) {
+                    //Display the right text if( $scope.nextStep._id !=  $scope.workshop.steps[elem]._id)
+                    var i = 1;
+                    //Next iteration
+                    if($scope.roundNum + 1 == elem) {
                         $scope.nextStep = $scope.workshop.steps[elem];
+                    } else { //Other iteration
+                        while ($scope.workshop.steps[$scope.roundNum + i].skiped) {
+                            i++;
+                        }
+                        if ($scope.roundNum + i == elem) {
+                            $scope.nextStep = $scope.workshop.steps[elem];
+                        }
                     }
                 }
             }
