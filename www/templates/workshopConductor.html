@@ -55,12 +55,12 @@
                     </div>
                 </div>
                 <!-- 2nd col -->
-                <div class="col col-10 text-center step-{{i}}">
-                    <div ng-class="{'stepDone': roundNum >= (i+1)}">{{timingArray[$index]}}</div>
+                <div class="col col-10 text-center step-{{i}} no-padding">
+                    <div class="padding-5" ng-class="{'stepDone': roundNum >= (i+1)}">{{timingArray[$index]}}</div>
                 </div>
                 <!-- 3rd col -->
-                <div class="col col-10 text-center step-{{i}}">
-                    <div ng-class="{'stepDone': roundNum >= (i+1)}">{{step.title}}<br />{{step.duration.theoricalMinutes}}</div>
+                <div class="col col-10 text-center step-{{i}} no-padding">
+                    <div class="padding-5" ng-class="{'stepDone': roundNum >= (i+1)}">{{step.title}}<br />{{step.duration.theoricalMinutes}}</div>
                 </div>
                 <!-- 4th col -->
                 <div ng-class="{'stepDoneText': roundNum >= (i+1)}" class="col step-{{i}}" ng-bind-html="step.description"></div>
