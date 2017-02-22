@@ -163,6 +163,18 @@ a#conducteur {
     flex-wrap: wrap;
 }
 
+p.date {
+    position: absolute;
+    bottom: 0px;
+    padding: 6px 25px;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: #fff;
+    margin: 5px;
+    width: calc(100% - 10px);
+    font-size: 16px;
+    border-radius: 2px;
+}
+
 /* #1a242f
 #2c3e50
 */
