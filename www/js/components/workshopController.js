@@ -257,6 +257,7 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
 
     //Delete an iteration on swipe
     var tmpCurrentTime;
+    var tmpIterationRunning;
     $scope.swipeToDelete = function(elem) {
 
         var elems = document.getElementsByClassName("step-" + elem);
@@ -277,19 +278,28 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
             if(!$scope.workshop.steps[elem].skiped) {
                 if (elem == $scope.roundNum) {
                     tmpCurrentTime = $scope.timer;
-                    console.log(tmpCurrentTime);
 
                     $scope.decreaseTimer($scope.timer);
                     $scope.workshop.steps[elem].skiped = true;
+                    tmpIterationRunning = $scope.iterationRunning;
                 } else {
                     $scope.updateIterationsTimes(elem, -$scope.workshop.steps[elem].duration.theorical * 60);
                     $scope.workshop.steps[elem].skiped = true;
                 }
             } else {
+                //Current iteration
                 if (elem == $scope.roundNum) {
-                    console.log(tmpCurrentTime);
                     $scope.increaseTimer(tmpCurrentTime);
                     $scope.workshop.steps[elem].skiped = false;
+
+                    media.pause();
+                    $scope.continueToNextIteration = false;
+                    $scope.iterationRunning = tmpIterationRunning;
+                    $scope.timerIsSync = true;
+
+                    if(!tmpIterationRunning) {
+                        stopIterationTimer(false);
+                    }
                 } else {
                     $scope.updateIterationsTimes(elem, $scope.workshop.steps[elem].duration.theorical * 60);
                     $scope.workshop.steps[elem].skiped = false;
@@ -478,17 +488,26 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
         $scope.timerIsSync = true;
     };
 
-    function nextIteration(){
+    function nextIteration() {
         $scope.roundNum++;
         // Avoid empty iterations
-        while($scope.workshopStepsDuration[$scope.roundNum] == -1
-                && $scope.roundNum < $scope.workshopStepsDuration.length){
+        while ($scope.workshopStepsDuration[$scope.roundNum] == -1
+        && $scope.roundNum < $scope.workshopStepsDuration.length) {
             $scope.roundNum++;
         }
-        //Avoird skiped iterations
-        while($scope.workshop.steps[$scope.roundNum].skiped) {
-            $scope.roundNum++;
+
+        //Avoid skiped iterations
+        if ($scope.roundNum < $scope.workshopStepsDuration.length) {
+            while ($scope.workshop.steps[$scope.roundNum].skiped) {
+                $scope.roundNum++;
+
+                //If we are already at the end
+                if($scope.roundNum == $scope.workshopStepsDuration.length - 1) {
+                    endOfWorkshop();
+                }
+            }
         }
+
         // Go to the next iteration or ends the workshop
         if($scope.roundNum < $scope.workshopStepsDuration.length){
             initializeIterationTimer($scope.workshopStepsDuration[$scope.roundNum]);
