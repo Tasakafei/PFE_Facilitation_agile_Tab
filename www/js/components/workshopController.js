@@ -3,7 +3,7 @@
 var app = angular.module('facilitation');
 
 app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $interval, $ionicModal,
-                                        socket, TimerService, WorkshopsProvider) {
+                                        socket, TimerService, WorkshopsProvider, $ionicPlatform) {
     $scope.workshop = {};
     $scope.timerIsSync = null;
     $scope.iterationRunning = false;
@@ -337,6 +337,8 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
     // Used to leave the instance when destroying (leaving) this controller
     $scope.$on("$destroy", function(){
         console.log("Leave room : "+$scope.workshop._id);
+        media.pause();
+        socket.emit('stop_sound', $scope.workshop._id);
         socket.emit('leave_room', $scope.workshop._id);
         endOfWorkshop();
     });
