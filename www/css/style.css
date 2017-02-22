@@ -83,11 +83,11 @@ div#global-timer-in {
 #workshop .item.item-text-wrap {
     padding-top: 5px;
     padding-bottom: 5px;
-    font-size: 16px;
+    font-size: 18px;
 }
 
 #first-row .item h2 {
-    font-size: 18px;
+    font-size: 20px;
 }
 
 #first-row .item.item-divider {
@@ -354,7 +354,7 @@ a#closeModal {
 }
 
 div#table {
-    font-size: 16px;
+    font-size: 18px;
 }
 
 div#table .button {

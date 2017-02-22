@@ -21,7 +21,7 @@ app.service('WorkshopsProvider', function ($http) {
                 }
                 //url: host+ '/users/unauth/'+$rootScope.currentUser.login+'/instances'
             }).then(function successCallback(data) {
-                console.log("getWorkshops data : "+JSON.stringify(data));
+                //console.log("getWorkshops data : "+JSON.stringify(data));
                 callback(data.data);
             }, function errorCallback(error) {
                 alert("error : echec de la récupération des instances !  "+JSON.stringify(error));
@@ -43,7 +43,7 @@ app.service('WorkshopsProvider', function ($http) {
                 }
                 //url: host+'/users/unauth/'+$rootScope.currentUser.login+'/instances/'+idWorkshop
             }).then(function successCallback(data) {
-                console.log("getWorkshops data : "+JSON.stringify(data));
+                //console.log("getWorkshops data : "+JSON.stringify(data));
                 callback(data.data);
             }, function errorCallback(error) {
                 alert("error : echec de la récupération de l'instance !  "+JSON.stringify(error));
