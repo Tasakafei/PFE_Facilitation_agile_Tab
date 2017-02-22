@@ -170,7 +170,7 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
         var theoricalMinutes = [];
         theoricalMinutes[iterationNb] =  formatTime($scope.workshopStepsDuration[iterationNb]/60 * 60000);
 
-        var timeVariationDuratAdd agenda view (not linked)ion = $scope.workshopStepsDuration[iterationNb]/60 * 60000
+        var timeVariationDuration = $scope.workshopStepsDuration[iterationNb]/60 * 60000
             - parseInt($scope.workshop.steps[iterationNb].duration.theorical) * 60000;
         var timeVariationPresentation;
 
