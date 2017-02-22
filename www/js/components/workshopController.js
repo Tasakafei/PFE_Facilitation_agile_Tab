@@ -204,7 +204,6 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
         });
     };
 
-    //TODO : Correct this shit, it's not working
     function moveChevron() {
         //We are late
         if($scope.actualGlobalTimer > $scope.theoreticalGlobalTimer) {
@@ -216,11 +215,7 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
                 if($scope.workshopStepsDuration[i] != undefined)
                     accumulatorReal += $scope.workshopStepsDuration[i];
 
-                //Real final time
-                var finalTime = $scope.actualGlobalTimer - $scope.theoreticalGlobalTimer;
-                finalTime = $scope.theoreticalGlobalTimer - finalTime;
-
-                if( accumulatorReal > finalTime ) {
+                if( accumulatorReal > $scope.theoreticalGlobalTimer ) {
                     var elem = document.getElementsByClassName("step-"+(i))[0];
 
                     //Clean other chevron
@@ -230,6 +225,18 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
 
                     //Add chevron
                     elem.getElementsByClassName("chevron")[0].style.display = "block";
+
+                    //TODO something wrong here :/
+                    //Calcul chevron position
+                    var length = $scope.timingArray.length;
+                    var timeTab = $scope.timingArray[length-1].split(":");
+                    var time = (timeTab[0]*60 + timeTab[1]) * 60;
+                    var chevronImgHeight = elem.getElementsByClassName("img-chevron")[0].offsetHeight;
+
+                    //Add chevron position
+                    var chevronHeight =  100 * ( accumulatorReal - time) / $scope.workshopStepsDuration[i] ;
+                    elem.getElementsByClassName("img-chevron")[0].style.top = (elem.offsetHeight - (chevronHeight / 100 * elem.offsetHeight)) - (chevronImgHeight / 2) +"px";
+
                     break;
                 }
             }
@@ -282,7 +289,9 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
                     $scope.workshop.steps[elem].skiped = true;
                     tmpIterationRunning = $scope.iterationRunning;
                 } else {
-                    $scope.updateIterationsTimes(elem, -$scope.workshop.steps[elem].duration.theorical * 60);
+                    console.log($scope.workshopStepsDuration[elem]);
+                    console.log($scope.workshop.steps[elem].duration.theorical * 60);
+                    $scope.updateIterationsTimes(elem, -$scope.workshopStepsDuration[elem]);
                     $scope.workshop.steps[elem].skiped = true;
 
                     //Display the right text

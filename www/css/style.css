@@ -351,6 +351,7 @@ a#closeModal {
     width: 50px;
     position: relative;
     left: -15px;
+    top: -10px;
 }
 
 div#table {
