@@ -273,7 +273,6 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
                 buttons[i].classList.toggle("hideButton30");
             }
 
-            //TODO : Ne pas afficher dans la première page les itérations zapées
             //If not already skiped
             if(!$scope.workshop.steps[elem].skiped) {
                 if (elem == $scope.roundNum) {
@@ -285,6 +284,11 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
                 } else {
                     $scope.updateIterationsTimes(elem, -$scope.workshop.steps[elem].duration.theorical * 60);
                     $scope.workshop.steps[elem].skiped = true;
+
+                    //Display the right text
+                    for( var i =0; $scope.nextStep.skiped; i++) {
+                        $scope.nextStep = $scope.workshop.steps[elem + i];
+                    }
                 }
             } else {
                 //Current iteration
@@ -303,6 +307,11 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
                 } else {
                     $scope.updateIterationsTimes(elem, $scope.workshop.steps[elem].duration.theorical * 60);
                     $scope.workshop.steps[elem].skiped = false;
+
+                    //Display the right text
+                    if( $scope.nextStep._id !=  $scope.workshop.steps[elem]._id) {
+                        $scope.nextStep = $scope.workshop.steps[elem];
+                    }
                 }
             }
 
@@ -512,8 +521,15 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
         if($scope.roundNum < $scope.workshopStepsDuration.length){
             initializeIterationTimer($scope.workshopStepsDuration[$scope.roundNum]);
             $scope.currentStep = $scope.workshop.steps[$scope.roundNum];
-            if($scope.workshop.steps[$scope.roundNum+1] != undefined)
-                $scope.nextStep = $scope.workshop.steps[$scope.roundNum+1];
+            if($scope.workshop.steps[$scope.roundNum+1] != undefined) {
+
+                var i = 1;
+                //Avoid skiped iterations
+                while($scope.workshop.steps[$scope.roundNum+i].skiped) {
+                    i++;
+                }
+                $scope.nextStep = $scope.workshop.steps[$scope.roundNum + i];
+            }
             else
                 $scope.nextStep = "";
             putNextStepMaxHeight();
