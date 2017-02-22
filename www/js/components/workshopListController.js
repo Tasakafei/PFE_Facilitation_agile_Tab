@@ -5,6 +5,8 @@ var app = angular.module('facilitation');
 app.controller('WorkshopListCtrl', function($scope, WorkshopsProvider, $stateParams, $timeout, ionicMaterialInk, ionicMaterialMotion) {
     $scope.workshops = {};
 
+    console.log(JSON.stringify($scope.currentUser));
+
     //$scope.$parent.showHeader();
     //$scope.$parent.clearFabs();
     $scope.isExpanded = true;

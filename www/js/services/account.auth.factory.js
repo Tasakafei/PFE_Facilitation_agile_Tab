@@ -12,11 +12,6 @@ angular.module('facilitation')
 
         return {
 
-            fakeLogin: function (user, callback) {
-                $rootScope.currentUser = user;
-                return callback();
-            },
-
             login: function(provider, user, callback) {
                 var cb = callback || angular.noop;
                 Session.save({
@@ -25,11 +20,9 @@ angular.module('facilitation')
                     password: user.password,
                     rememberMe: user.rememberMe
                 }, function(user) {
-                    console.log("no error according to the login func");
                     $rootScope.currentUser = user;
                     return cb();
                 }, function(err) {
-                    console.log("ERROR according to the login func");
                     console.log(JSON.stringify(err));
                     return cb(err);
                 });
@@ -46,48 +39,13 @@ angular.module('facilitation')
                     });
             },
 
-            createUser: function(userinfo, callback) {
-                var cb = callback || angular.noop;
-                User.save(userinfo,
-                    function(user) {
-                        $rootScope.currentUser = user;
-                        return cb();
-                    },
-                    function(err) {
-                        return cb(err.data);
-                    });
+            isConnected: function() {
+                return !!$rootScope.currentUser;
             },
 
             currentUser: function() {
                 Session.get(function(user) {
                     $rootScope.currentUser = user;
-                });
-            },
-
-            changePassword: function(email, oldPassword, newPassword, callback) {
-                var cb = callback || angular.noop;
-                User.update({
-                    email: email,
-                    oldPassword: oldPassword,
-                    newPassword: newPassword
-                }, function(user) {
-                    console.log('password changed');
-                    return cb();
-                }, function(err) {
-                    return cb(err.data);
-                });
-            },
-
-            removeUser: function(email, password, callback) {
-                var cb = callback || angular.noop;
-                User.delete({
-                    email: email,
-                    password: password
-                }, function(user) {
-                    console.log(user + 'removed');
-                    return cb();
-                }, function(err) {
-                    return cb(err.data);
                 });
             }
         };

@@ -8,6 +8,11 @@
 
 angular.module('facilitation')
     .factory('Session', function ($resource) {
-        return $resource('http://pfe-facilitation.herokuapp.com/auth/session/');
+        return $resource('https://pfe-facilitation.herokuapp.com/auth/session/');
     });
 
+
+/*
+ return $resource('https://pfe-facilitation.herokuapp.com/auth/session/',
+ {}, {headers: { 'Access-Control-Allow-Origin': '*' }});
+ */

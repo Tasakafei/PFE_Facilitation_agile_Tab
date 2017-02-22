@@ -3,7 +3,7 @@
 var app = angular.module('facilitation');
 
 app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $interval, $ionicModal,
-                                        socket, TimerService, WorkshopsProvider, ViewAccessService) {
+                                        socket, TimerService, WorkshopsProvider) {
     $scope.workshop = {};
     $scope.timerIsSync = null;
     $scope.iterationRunning = false;

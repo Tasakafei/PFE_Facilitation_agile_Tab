@@ -18,7 +18,7 @@ angular.module('facilitation',
       'ui.rCalendar',
     ])
 
-.run(function($ionicPlatform, socket, $rootScope, $location) {
+.run(function($ionicPlatform, socket, $rootScope, $location, $http, $cookies) {
   $ionicPlatform.ready(function() {
 
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -40,9 +40,10 @@ angular.module('facilitation',
             $location.path('/');
         }
     });
+
 })
 
-.config(function($stateProvider, $urlRouterProvider) {
+.config(function($stateProvider, $urlRouterProvider, $httpProvider) {
 
   // Ionic uses AngularUI Router which uses the concept of states
   // Learn more here: https://github.com/angular-ui/ui-router
@@ -100,5 +101,7 @@ angular.module('facilitation',
 
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/tab/login');
+
+  $httpProvider.defaults.withCredentials = true;
 
 });
