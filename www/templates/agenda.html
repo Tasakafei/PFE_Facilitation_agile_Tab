@@ -1,6 +1,8 @@
 <ion-view id="agenda" view-title="Agenda">
     <ion-content scroll="false">
-        <calendar calendar-mode="calendar.mode" event-source="eventSource"
-                  format-hour-column="HH:mm"></calendar>
+        <calendar id="lololol" calendar-mode="calendar.mode" event-source="eventSource" starting-day-week="startingDayWeek"
+                  format-hour-column="HH:mm" weekview-normal-event-template-url="weekviewNormalEventTemplateUrl"
+                  after-render="makeCalendarClickable"></calendar>
     </ion-content>
 </ion-view>
+

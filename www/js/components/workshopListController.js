@@ -22,24 +22,7 @@ app.controller('WorkshopListCtrl', function($scope, WorkshopsProvider, $statePar
     ionicMaterialMotion.fadeSlideInRight({
         selector: '.animate-fade-slide-in .item'
     });
-    WorkshopsProvider.getWorkshops(function (workshopsResult) {
-        $scope.workshops = workshopsResult.data;
-
-        //$scope.workshopsGrouped = groupWorkshops(workshopsResult);
-        $scope.workshopSlice1 = workshopsResult.data.slice(0, workshopsResult.data.length/2);
-        $scope.workshopSlice2 = workshopsResult.data.slice(workshopsResult.data.length/2, workshopsResult.data.length);
+    WorkshopsProvider.getEventsByDay($stateParams.dayNumber,function (dayEvents) {
+        $scope.workshops = dayEvents;
     });
-
-    function groupWorkshops(workshopsResult) {
-        var result = [];
-        for(var i = 0 ; i < workshopsResult.data.length; i+=2){
-            var item = [];
-            item.push(workshopsResult.data[i]);
-            if(i+1 < workshopsResult.data.length){
-                item.push(workshopsResult.data[i+1]);
-            }
-            result.push(item);
-        }
-        return result;
-    }
 });

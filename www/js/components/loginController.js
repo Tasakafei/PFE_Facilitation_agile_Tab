@@ -25,7 +25,7 @@ app.controller('LoginCtrl', function($scope, $state, Auth) {
                 $scope.errors = {};
 
                 if (!err) {
-                    $state.go('tab.workshopList');
+                    $state.go('tab.agenda');
                 } else {
                     angular.forEach(err.errors, function(error, field) {
                         console.log("ERROR : " + error + " : "+ field);

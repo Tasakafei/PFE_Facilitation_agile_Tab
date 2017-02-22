@@ -69,7 +69,7 @@ angular.module('facilitation',
   })
 
   .state('tab.workshopList', {
-    url: '/workshops',
+    url: '/workshops/day/:dayNumber',
     views: {
       'tab-workshop': {
         templateUrl: 'templates/workshopList.html',

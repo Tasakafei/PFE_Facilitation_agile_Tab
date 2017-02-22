@@ -50,4 +50,51 @@ app.service('WorkshopsProvider', function ($http) {
             });
         });
     };
+
+    delete $http.defaults.headers.common['X-Requested-With'];
+    this.getEvents = function(callback){
+        $http.get('connection.properties').then(function (response) {
+            host = response.data.serverURL;
+            $http({
+                method: 'GET',
+                url:host+'/users/events',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+                //url: host+'/users/unauth/'+$rootScope.currentUser.login+'/instances/'+idWorkshop
+            }).then(function successCallback(data) {
+                callback(data.data);
+            }, function errorCallback(error) {
+                alert("error : echec de la récupération des events !  "+JSON.stringify(error));
+            });
+        });
+    };
+
+    delete $http.defaults.headers.common['X-Requested-With'];
+    this.getEventsByDay = function(dayNumber, callback){
+        $http.get('connection.properties').then(function (response) {
+            host = response.data.serverURL;
+            $http({
+                method: 'GET',
+                url:host+'/users/events',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+                //url: host+'/users/unauth/'+$rootScope.currentUser.login+'/instances/'+idWorkshop
+            }).then(function successCallback(data) {
+                var events = data.data.data;
+                var dayEvents = [];
+
+                events.forEach(function (event) {
+                    if(new Date(event.begin_at).getDay() == dayNumber){
+                        dayEvents.push(event);
+                    }
+                });
+
+                callback(dayEvents);
+            }, function errorCallback(error) {
+                alert("error : echec de la récupération des events !  "+JSON.stringify(error));
+            });
+        });
+    };
 });
