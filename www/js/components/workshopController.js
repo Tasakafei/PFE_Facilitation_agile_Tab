@@ -64,8 +64,6 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
         initializeIterationTimer($scope.workshopStepsDuration[$scope.roundNum]);
         initializeGlobalTimer($scope.overallTime);
 
-        console.log(JSON.stringify(workshop.steps));
-
         /* ***** Initializing data for the conductor view ***** */
         $scope.stepsLength = $scope.workshop.steps.length;
 
@@ -109,7 +107,7 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
      */
     $scope.updateIterationsTimes = function (iterationNb, value) {
         // If previous iteration selected, do nothing
-        if(iterationNb >= $scope.roundNum){
+        if(iterationNb >= $scope.roundNum) {
             // TODO : Condition to remove in the future to accept empty iterations
             if($scope.workshopStepsDuration[iterationNb] != -1){
                 // Modifying current iteration data
@@ -130,7 +128,13 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
                     }
                 } else {
                     // Updating actual global timer (if not handled before with the current iteration)
-                    if($scope.workshopStepsDuration[iterationNb] != 0) {
+                    if($scope.workshopStepsDuration[iterationNb] >= 0 && value >= 0) {
+                        $scope.actualGlobalTimer += value;
+                        if ($scope.actualGlobalTimer < 0) {
+                            $scope.actualGlobalTimer = 0;
+                        }
+                        updateTimersInConductor(iterationNb, value);
+                    } else if ($scope.workshopStepsDuration[iterationNb] != 0){
                         $scope.actualGlobalTimer += value;
                         if ($scope.actualGlobalTimer < 0) {
                             $scope.actualGlobalTimer = 0;
@@ -155,11 +159,18 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
             $scope.workshopStepsDuration[iterationNb] = 0;
         }
 
+        //Check if the user double the time allowed or if he reduce it too much
+        if($scope.workshopStepsDuration[iterationNb] == ($scope.workshop.steps[iterationNb].duration.theorical * 60 * 2) && (value > 0)) {
+            $scope.showAlert("Vous avez doublé le temps alloué à cette itération.");
+        } else if ($scope.workshopStepsDuration[iterationNb] == ($scope.workshop.steps[iterationNb].duration.theorical * 60 / 2) && (value < 0)) {
+            $scope.showAlert("Vous avez divisé par 2 le temps alloué à cette itération.");
+        }
+
         //Output format
         var theoricalMinutes = [];
         theoricalMinutes[iterationNb] =  formatTime($scope.workshopStepsDuration[iterationNb]/60 * 60000);
 
-        var timeVariationDuration = $scope.workshopStepsDuration[iterationNb]/60 * 60000
+        var timeVariationDuratAdd agenda view (not linked)ion = $scope.workshopStepsDuration[iterationNb]/60 * 60000
             - parseInt($scope.workshop.steps[iterationNb].duration.theorical) * 60000;
         var timeVariationPresentation;
 
@@ -178,6 +189,13 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
             theoricalMinutes[iterationNb] + " " + timeVariationPresentation;
     }
 
+    $scope.showAlert = function(content) {
+        $ionicPopup.alert({
+            title: 'Attention !',
+            template: content
+        });
+    };
+
     // Filter the steps to retrieve only the durations
     function filterWorkshopDurationSteps(workshop){
         return workshop.steps.map(function (step) {
@@ -185,6 +203,49 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
             else return -1;
         });
     };
+
+    //TODO : Correct this shit, it's not working
+    function moveChevron() {
+        //We are late
+        if($scope.actualGlobalTimer > $scope.theoreticalGlobalTimer) {
+
+            var accumulatorReal = 0;
+            for (var i = 0; i < $scope.workshop.steps.length; i++) {
+
+                //Real time steps accumulation
+                if($scope.workshopStepsDuration[i] != undefined)
+                    accumulatorReal += $scope.workshopStepsDuration[i];
+
+                //Real final time
+                var finalTime = $scope.actualGlobalTimer - $scope.theoreticalGlobalTimer;
+                finalTime = $scope.theoreticalGlobalTimer - finalTime;
+
+                if( accumulatorReal > finalTime ) {
+                    var elem = document.getElementsByClassName("step-"+(i))[0];
+
+                    //Clean other chevron
+                    for(var y = 0; y < document.getElementsByClassName("chevron").length; y++) {
+                        document.getElementsByClassName("chevron")[y].style.display = "none";
+                    }
+
+                    //Add chevron
+                    elem.getElementsByClassName("chevron")[0].style.display = "block";
+                    break;
+                }
+            }
+        } //We are in time
+        else  {
+
+            //Clean other chevron
+            for(var y = 0; y < document.getElementsByClassName("chevron").length; y++) {
+                document.getElementsByClassName("chevron")[y].style.display = "none";
+            }
+
+            //Add chevron at the end
+            var elem = document.getElementsByClassName("step-"+($scope.workshop.steps.length -1))[0];
+            elem.getElementsByClassName("chevron")[0].style.display = "block";
+        }
+    }
 
     /*********************************************** TIMER SYNC *******************************************************/
 
@@ -195,17 +256,46 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
     };
 
     //Delete an iteration on swipe
+    var tmpCurrentTime;
     $scope.swipeToDelete = function(elem) {
 
-        var elems = document.getElementsByClassName("step-"+elem);
-        var buttons = elems[3].getElementsByClassName("button-positive");
+        var elems = document.getElementsByClassName("step-" + elem);
+        var buttons = elems[5].getElementsByClassName("button-positive");
 
-        for(var i = 0; i < elems.length; i++) {
-            elems[i].classList.toggle("stepSwipe");
-        }
+        //Check if the step is not already over
+        if (!elems[0].getElementsByClassName('stepDoneFirst')[0]) {
+            for (var i = 0; i < elems.length; i++) {
+                elems[i].classList.toggle("stepSwipe");
+            }
 
-        for(i = 0; i < buttons.length; i++) {
-            buttons[i].classList.toggle("hideButton30");
+            for (i = 0; i < buttons.length; i++) {
+                buttons[i].classList.toggle("hideButton30");
+            }
+
+            //TODO : Ne pas afficher dans la première page les itérations zapées
+            //If not already skiped
+            if(!$scope.workshop.steps[elem].skiped) {
+                if (elem == $scope.roundNum) {
+                    tmpCurrentTime = $scope.timer;
+                    console.log(tmpCurrentTime);
+
+                    $scope.decreaseTimer($scope.timer);
+                    $scope.workshop.steps[elem].skiped = true;
+                } else {
+                    $scope.updateIterationsTimes(elem, -$scope.workshop.steps[elem].duration.theorical * 60);
+                    $scope.workshop.steps[elem].skiped = true;
+                }
+            } else {
+                if (elem == $scope.roundNum) {
+                    console.log(tmpCurrentTime);
+                    $scope.increaseTimer(tmpCurrentTime);
+                    $scope.workshop.steps[elem].skiped = false;
+                } else {
+                    $scope.updateIterationsTimes(elem, $scope.workshop.steps[elem].duration.theorical * 60);
+                    $scope.workshop.steps[elem].skiped = false;
+                }
+            }
+
         }
     };
 
@@ -395,6 +485,10 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
                 && $scope.roundNum < $scope.workshopStepsDuration.length){
             $scope.roundNum++;
         }
+        //Avoird skiped iterations
+        while($scope.workshop.steps[$scope.roundNum].skiped) {
+            $scope.roundNum++;
+        }
         // Go to the next iteration or ends the workshop
         if($scope.roundNum < $scope.workshopStepsDuration.length){
             initializeIterationTimer($scope.workshopStepsDuration[$scope.roundNum]);
@@ -421,6 +515,8 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
                 }
             }
 
+            //Check if we need to move the chevron
+            moveChevron();
 
         }, 1000);
     }
