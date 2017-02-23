@@ -38,7 +38,7 @@ app.controller('AgendaCtrl', function($scope, WorkshopsProvider) {
         tables.forEach(function (table) {
             for (var i = 0; i < table.rows.length; i++) {
                 for (var j = 0; j < table.rows[i].cells.length; j++) {
-                    table.rows[i].cells[j].setAttribute("onclick","goToDetailedDay("+(j-1)+")");
+                    table.rows[i].cells[j].setAttribute("onclick",'location.href = \"#/tab/workshops/day/\"+('+(j-1)+');');
                 }
             }
         });
