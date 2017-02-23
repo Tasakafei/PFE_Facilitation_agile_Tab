@@ -8,7 +8,7 @@
 
 angular.module('facilitation')
     .factory('Session', function ($resource) {
-        return $resource('https://pfe-facilitation.herokuapp.com/auth/session/');
+        return $resource('http://localhost:3000/auth/session/');
     });
 
 
