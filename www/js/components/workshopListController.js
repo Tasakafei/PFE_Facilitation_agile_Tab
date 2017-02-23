@@ -5,9 +5,9 @@ var app = angular.module('facilitation');
 app.controller('WorkshopListCtrl', function($scope, WorkshopsProvider, $stateParams, $timeout, ionicMaterialInk, ionicMaterialMotion, $ionicPopup) {
     $scope.workshops = {};
 
-    $scope.currentDate = new Date();
+    $scope.currentDate = new Date().setHours(new Date().getHours() - (new Date().getDay() - $stateParams.dayNumber) * 24);
 
-    console.log(JSON.stringify($scope.currentUser));
+    console.log(JSON.stringify($stateParams.dayNumber));
 
     //$scope.$parent.showHeader();
     //$scope.$parent.clearFabs();
