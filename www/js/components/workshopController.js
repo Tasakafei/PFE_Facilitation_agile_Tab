@@ -376,6 +376,7 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
         $scope.iterationRunning = false;
         $scope.roundNum = 0;
         stopGlobalTimer();
+        stopIterationTimer(false);
         initializeIterationTimer(0);
     }
 
