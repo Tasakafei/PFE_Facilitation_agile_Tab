@@ -535,45 +535,80 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
         $scope.timerIsSync = true;
     };
 
+    function handleEmptyIteration(callback){
+        if($scope.workshopStepsDuration[$scope.roundNum] == -1
+            && $scope.roundNum < $scope.workshopStepsDuration.length - 1){
+
+            $ionicPopup.confirm({
+                title:"Do you want to play an additional iteration ?",
+                template:"This workshop allows you to add a copy of the previous iteration." +
+                "This mean to add " + $scope.workshop.steps[$scope.roundNum - 1].duration.theorical +
+                " minutes to your workshop. Do you want to add it ?",
+                cancelText:"No",
+                okText:"Yes"
+            }).then(function (answer) {
+                if(answer == true) {
+                    console.log("Wants to add an iteration");
+                    $scope.workshopStepsDuration[$scope.roundNum] = $scope.workshop.steps[$scope.roundNum - 1].duration.theorical * 60;
+                    console.log(JSON.stringify($scope.workshopStepsDuration));
+                    $scope.workshop.steps[$scope.roundNum].title = $scope.workshop.steps[$scope.roundNum - 1].title;
+                    $scope.workshop.steps[$scope.roundNum].description = $scope.workshop.steps[$scope.roundNum - 1].description;
+                    $scope.workshop.steps[$scope.roundNum].duration = $scope.workshop.steps[$scope.roundNum - 1].duration;
+                    $scope.workshop.steps[$scope.roundNum].timing = $scope.workshop.steps[$scope.roundNum - 1].timing;
+                    callback(false);
+                } else {
+                    console.log("Doesn't want one more iteration");
+                    callback(true);
+                }
+            });
+        } else {
+            callback(false);
+        }
+    }
+
     function nextIteration() {
         $scope.roundNum++;
-        // Avoid empty iterations
-        while ($scope.workshopStepsDuration[$scope.roundNum] == -1
-        && $scope.roundNum < $scope.workshopStepsDuration.length) {
-            $scope.roundNum++;
-        }
 
-        //Avoid skiped iterations
-        if ($scope.roundNum < $scope.workshopStepsDuration.length) {
-            while ($scope.workshop.steps[$scope.roundNum].skiped) {
-                $scope.roundNum++;
+        handleEmptyIteration(function (checkNextEmptyIteration) {
 
-                //If we are already at the end
-                if($scope.roundNum == $scope.workshopStepsDuration.length - 1) {
+            if(checkNextEmptyIteration){
+                nextIteration();
+            } else {
+                //Avoid skipped iterations
+                if ($scope.roundNum < $scope.workshopStepsDuration.length) {
+                    while ($scope.workshop.steps[$scope.roundNum].skiped) {
+                        $scope.roundNum++;
+
+                        //If we are already at the end
+                        if ($scope.roundNum == $scope.workshopStepsDuration.length - 1) {
+                            endOfWorkshop();
+                        }
+                    }
+                }
+
+                // Go to the next iteration or ends the workshop
+                if ($scope.roundNum < $scope.workshopStepsDuration.length) {
+                    console.log(JSON.stringify($scope.workshopStepsDuration[$scope.roundNum]));
+                    console.log($scope.roundNum + " < " + $scope.workshopStepsDuration.length);
+                    initializeIterationTimer($scope.workshopStepsDuration[$scope.roundNum]);
+                    $scope.currentStep = $scope.workshop.steps[$scope.roundNum];
+                    if ($scope.workshop.steps[$scope.roundNum + 1] != undefined) {
+
+                        var i = 1;
+                        //Avoid skiped iterations
+                        while ($scope.workshop.steps[$scope.roundNum + i].skiped) {
+                            i++;
+                        }
+                        $scope.nextStep = $scope.workshop.steps[$scope.roundNum + i];
+                    }
+                    else
+                        $scope.nextStep = "";
+                    putNextStepMaxHeight();
+                } else {
                     endOfWorkshop();
                 }
             }
-        }
-
-        // Go to the next iteration or ends the workshop
-        if($scope.roundNum < $scope.workshopStepsDuration.length){
-            initializeIterationTimer($scope.workshopStepsDuration[$scope.roundNum]);
-            $scope.currentStep = $scope.workshop.steps[$scope.roundNum];
-            if($scope.workshop.steps[$scope.roundNum+1] != undefined) {
-
-                var i = 1;
-                //Avoid skiped iterations
-                while($scope.workshop.steps[$scope.roundNum+i].skiped) {
-                    i++;
-                }
-                $scope.nextStep = $scope.workshop.steps[$scope.roundNum + i];
-            }
-            else
-                $scope.nextStep = "";
-            putNextStepMaxHeight();
-        } else {
-            endOfWorkshop();
-        }
+        });
     }
 
     function runGlobalTimer() {
