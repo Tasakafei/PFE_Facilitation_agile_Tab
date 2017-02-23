@@ -3,7 +3,7 @@
 var app = angular.module('facilitation');
 
 app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $interval, $ionicModal,
-                                        socket, TimerService, WorkshopsProvider, $ionicPlatform) {
+                                        socket, TimerService, WorkshopsProvider) {
     $scope.workshop = {};
     $scope.timerIsSync = null;
     $scope.iterationRunning = false;
@@ -226,7 +226,6 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
                     //Add chevron
                     elem.getElementsByClassName("chevron")[0].style.display = "block";
 
-                    //TODO something wrong here :/
                     //Calcul chevron position
                     var length = $scope.timingArray.length;
                     var timeTab = $scope.timingArray[length-1].split(":");
@@ -235,6 +234,11 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
 
                     //Add chevron position
                     var chevronHeight =  100 * ( accumulatorReal - time) / $scope.workshopStepsDuration[i] ;
+
+                    if(chevronHeight < 0) {
+                        chevronHeight = 0;
+                    }
+
                     elem.getElementsByClassName("img-chevron")[0].style.top = (elem.offsetHeight - (chevronHeight / 100 * elem.offsetHeight)) - (chevronImgHeight / 2) +"px";
 
                     break;
@@ -251,6 +255,9 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
             //Add chevron at the end
             var elem = document.getElementsByClassName("step-"+($scope.workshop.steps.length -1))[0];
             elem.getElementsByClassName("chevron")[0].style.display = "block";
+
+            console.log(elem.getElementsByClassName("chevron")[0].style.display);
+            console.log(elem);
         }
     }
 
