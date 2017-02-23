@@ -33,6 +33,9 @@ app.controller('WorkshopListCtrl', function($scope, WorkshopsProvider, $statePar
                 dformat =  [d.getHours().padLeft(), d.getMinutes().padLeft()].join(':') +' '+ [(d.getMonth()+1).padLeft(), d.getDate().padLeft(), d.getFullYear()].join('/');
 
             $scope.workshops[i].dateAndTime = dformat;
+            if(typeof $scope.workshops[i].photo == 'undefined') {
+                $scope.workshops[i].photo = "/android_asset/www/img/default.jpg";
+            }
         }
     });
 

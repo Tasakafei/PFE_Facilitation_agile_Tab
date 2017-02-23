@@ -46,6 +46,7 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
 
     // Automatically retrieve the workshop instance when arriving in this controller
     WorkshopsProvider.getEventsByDay($stateParams.dayNumber,function (eventsResult) {
+        $scope.dayNumber = $stateParams.dayNumber;
         $scope.workshop = eventsResult.find(function (event) {
             return event._id == $stateParams.workshopId;
         });
@@ -162,9 +163,6 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
         }
 
         //Check if the user double the time allowed or if he reduce it too much
-        console.log($scope.workshopStepsDuration[iterationNb]);
-        console.log($scope.workshop.steps[iterationNb].duration.theorical * 60 * 2);
-
         if($scope.workshopStepsDuration[iterationNb] == ($scope.workshop.steps[iterationNb].duration.theorical * 60 * 2) && (value > 0)) {
             $scope.showAlert("Vous avez doublé le temps alloué à cette itération.");
         } else if ($scope.workshopStepsDuration[iterationNb] == ($scope.workshop.steps[iterationNb].duration.theorical * 60 / 2) && (value < 0)) {
@@ -306,7 +304,6 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
                     $scope.workshop.steps[elem].skiped = true;
                     tmpIterationRunning = $scope.iterationRunning;
                 } else {
-                    console.log($scope.workshopStepsDuration[elem]);
                     console.log($scope.workshop.steps[elem].duration.theorical * 60);
                     $scope.updateIterationsTimes(elem, -$scope.workshopStepsDuration[elem]);
                     $scope.workshop.steps[elem].skiped = true;

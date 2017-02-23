@@ -36,6 +36,13 @@
     margin-top: 0px;
 }
 
+#workshop #first-row2 {
+    height: 60%;
+    overflow-y: hidden;
+    padding: 0px 0px 0px 0px;
+    margin-top: 0px;
+}
+
 #workshop .second-row {
     height: 40%;
     overflow-y: scroll;
@@ -44,7 +51,7 @@
 }
 
 
-div#global-timer {
+div.global-timer {
     /*
     position: relative;
     padding: 0;
@@ -52,7 +59,7 @@ div#global-timer {
     display: flex;
 }
 
-div#global-timer-in {
+div.global-timer-in {
     /*
     position: absolute;
     bottom: 0;
@@ -64,15 +71,15 @@ div#global-timer-in {
     font-size: 20px;
 }
 
-#timer {
+.timer {
     display: flex;
 }
 
-#timer-buttons {
+.timer-buttons {
     display: flex;
 }
 
-#timer-buttons-in {
+.timer-buttons-in {
     margin: auto;
 }
 
@@ -142,7 +149,7 @@ a#conducteur {
     float: left;
 }
 
-#nextIteration {
+.nextIteration {
     position: relative;
     top: 26px
 }
@@ -208,7 +215,7 @@ p.date {
     background-color: #1a242f !important;
 }
 
-#timer path {
+.timer path {
     stroke: #2c3e50 !important;
 }
 
