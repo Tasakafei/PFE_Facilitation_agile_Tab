@@ -216,41 +216,50 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
                     accumulatorReal += $scope.workshopStepsDuration[i];
 
                 if( accumulatorReal > $scope.theoreticalGlobalTimer ) {
-                    var elem = document.getElementsByClassName("step-"+(i))[0];
+                    var modalActive = document.getElementsByClassName("modal-backdrop active")[0];
+                    // If the modal IS opened (if closed, issue can happen where deactivated modal is selected)
+                    if(modalActive != undefined) {
+                        var elem = modalActive.getElementsByClassName("step-" + (i))[0];
 
-                    //Clean other chevron
-                    for(var y = 0; y < document.getElementsByClassName("chevron").length; y++) {
-                        document.getElementsByClassName("chevron")[y].style.display = "none";
+                        //Clean other chevron
+                        for (var y = 0; y < document.getElementsByClassName("chevron").length; y++) {
+                            document.getElementsByClassName("chevron")[y].style.display = "none";
+                        }
+
+                        //Add chevron
+                        elem.getElementsByClassName("chevron")[0].style.display = "block";
+
+                        //TODO something wrong here :/
+                        //Calcul chevron position
+                        var length = $scope.timingArray.length;
+                        var timeTab = $scope.timingArray[length - 1].split(":");
+                        var time = (timeTab[0] * 60 + timeTab[1]) * 60;
+                        var chevronImgHeight = elem.getElementsByClassName("img-chevron")[0].offsetHeight;
+
+                        //Add chevron position
+                        var chevronHeight = 100 * ( accumulatorReal - time) / $scope.workshopStepsDuration[i];
+                        elem.getElementsByClassName("img-chevron")[0].style.top =
+                            (elem.offsetHeight - (chevronHeight / 100 * elem.offsetHeight)) - (chevronImgHeight / 2) + "px";
+
+                        break;
                     }
-
-                    //Add chevron
-                    elem.getElementsByClassName("chevron")[0].style.display = "block";
-
-                    //TODO something wrong here :/
-                    //Calcul chevron position
-                    var length = $scope.timingArray.length;
-                    var timeTab = $scope.timingArray[length-1].split(":");
-                    var time = (timeTab[0]*60 + timeTab[1]) * 60;
-                    var chevronImgHeight = elem.getElementsByClassName("img-chevron")[0].offsetHeight;
-
-                    //Add chevron position
-                    var chevronHeight =  100 * ( accumulatorReal - time) / $scope.workshopStepsDuration[i] ;
-                    elem.getElementsByClassName("img-chevron")[0].style.top = (elem.offsetHeight - (chevronHeight / 100 * elem.offsetHeight)) - (chevronImgHeight / 2) +"px";
-
-                    break;
                 }
             }
         } //We are in time
         else  {
 
-            //Clean other chevron
-            for(var y = 0; y < document.getElementsByClassName("chevron").length; y++) {
-                document.getElementsByClassName("chevron")[y].style.display = "none";
-            }
+            var modalActive = document.getElementsByClassName("modal-backdrop active")[0];
+            // If the modal IS opened (if closed, issue can happen where deactivated modal is selected)
+            if(modalActive != undefined) {
+                //Clean other chevron
+                for (var y = 0; y < document.getElementsByClassName("chevron").length; y++) {
+                    document.getElementsByClassName("chevron")[y].style.display = "none";
+                }
 
-            //Add chevron at the end
-            var elem = document.getElementsByClassName("step-"+($scope.workshop.steps.length -1))[0];
-            elem.getElementsByClassName("chevron")[0].style.display = "block";
+                //Add chevron at the end
+                var elem = modalActive.getElementsByClassName("step-" + ($scope.workshop.steps.length - 1))[0];
+                elem.getElementsByClassName("chevron")[0].style.display = "block";
+            }
         }
     }
 
@@ -346,7 +355,9 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
     // Used to leave the instance when destroying (leaving) this controller
     $scope.$on("$destroy", function(){
         console.log("Leave room : "+$scope.workshop._id);
-        media.pause();
+        if(isServe) media.pause();
+        else media.stop();
+        $scope.modal.remove();
         socket.emit('stop_sound', $scope.workshop._id);
         socket.emit('leave_room', $scope.workshop._id);
         endOfWorkshop();
