@@ -14,13 +14,9 @@ app.controller('AgendaCtrl', function($scope, WorkshopsProvider) {
 
     WorkshopsProvider.getEvents(function (events) {
         $scope.eventSource = [];
-
-        console.log(new Date(events.data[0].begin_at).getDay());
-
         $scope.workshops = events.data;
 
         events.data.forEach(function (event) {
-
             var dateStart = new Date(event.begin_at);
             var dateEnd = new Date(dateStart);
             dateEnd.setMinutes(dateStart.getMinutes() + event.duration);

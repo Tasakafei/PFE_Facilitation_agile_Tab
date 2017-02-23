@@ -5,6 +5,8 @@ var app = angular.module('facilitation');
 app.controller('WorkshopListCtrl', function($scope, WorkshopsProvider, $stateParams, $timeout, ionicMaterialInk, ionicMaterialMotion, $ionicPopup) {
     $scope.workshops = {};
 
+    $scope.currentDate = new Date();
+
     console.log(JSON.stringify($scope.currentUser));
 
     //$scope.$parent.showHeader();
