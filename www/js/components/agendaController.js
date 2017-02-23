@@ -14,13 +14,9 @@ app.controller('AgendaCtrl', function($scope, WorkshopsProvider) {
 
     WorkshopsProvider.getEvents(function (events) {
         $scope.eventSource = [];
-
-        console.log(new Date(events.data[0].begin_at).getDay());
-
         $scope.workshops = events.data;
 
         events.data.forEach(function (event) {
-
             var dateStart = new Date(event.begin_at);
             var dateEnd = new Date(dateStart);
             dateEnd.setMinutes(dateStart.getMinutes() + event.duration);
@@ -42,7 +38,7 @@ app.controller('AgendaCtrl', function($scope, WorkshopsProvider) {
         tables.forEach(function (table) {
             for (var i = 0; i < table.rows.length; i++) {
                 for (var j = 0; j < table.rows[i].cells.length; j++) {
-                    table.rows[i].cells[j].setAttribute("onclick","goToDetailedDay("+(j-1)+")");
+                    table.rows[i].cells[j].setAttribute("onclick",'location.href = \"#/tab/workshops/day/\"+('+(j-1)+');');
                 }
             }
         });
