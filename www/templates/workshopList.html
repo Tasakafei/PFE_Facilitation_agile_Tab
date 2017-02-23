@@ -8,7 +8,7 @@
         </div>
         <div class="row" id="workshops-list">
             <div ng-repeat="workshop in workshops" class="col col-33">
-                <a  href="#/tab/workshops/{{workshop._id}}" class="card card-gallery material-fix">
+                <a  href="#/tab/workshops/day/{{dayNumber}}/{{workshop._id}}" class="card card-gallery material-fix">
                     <div class="ink light calm-bg">
                         <h4 class="workshop-title">{{workshop.title}}</h4>
                         <img class="full-image" src="{{workshop.photo}}">

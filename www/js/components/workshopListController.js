@@ -23,6 +23,7 @@ app.controller('WorkshopListCtrl', function($scope, WorkshopsProvider, $statePar
         selector: '.animate-fade-slide-in .item'
     });
     WorkshopsProvider.getEventsByDay($stateParams.dayNumber,function (dayEvents) {
+        $scope.dayNumber = $stateParams.dayNumber;
         $scope.workshops = dayEvents;
 
         for (var i = 0; i < $scope.workshops.length; i++) {

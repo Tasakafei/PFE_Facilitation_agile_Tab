@@ -45,11 +45,13 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
     initMediaAudio();
 
     // Automatically retrieve the workshop instance when arriving in this controller
-    WorkshopsProvider.getWorkshopById($stateParams.workshopId, function (workshopResult) {
-        $scope.workshop = workshopResult.data;
+    WorkshopsProvider.getEventsByDay($stateParams.dayNumber,function (eventsResult) {
+        $scope.workshop = eventsResult.find(function (event) {
+            return event._id == $stateParams.workshopId;
+        });
 
         /* ***** Initializing data for the iteration view ***** */
-        $scope.workshopStepsDuration = filterWorkshopDurationSteps(workshopResult.data);
+        $scope.workshopStepsDuration = filterWorkshopDurationSteps($scope.workshop);
         $scope.overallTime = $scope.workshopStepsDuration.reduce(
             function (a, b) {
                 if(b != -1) return a+b;
