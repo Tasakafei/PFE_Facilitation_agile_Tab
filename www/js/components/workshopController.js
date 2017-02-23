@@ -535,8 +535,19 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
         $scope.timerIsSync = true;
     };
 
+    /**
+     * Handles empty iterations. There can be empty iterations which can be "instantiated" by
+     * copying the previous iteration.
+     *
+     * @param callback
+     */
     function handleEmptyIteration(callback){
-        if($scope.workshopStepsDuration[$scope.roundNum] == -1
+        // When the empty iteration is the end of the workshop, increment the roundNum and continue
+        if($scope.roundNum == $scope.workshopStepsDuration.length - 1) {
+            $scope.roundNum++;
+            callback(false);
+        // Copyable empty iteration, show the popup asking to add or not the new copied iteration
+        } else if($scope.workshopStepsDuration[$scope.roundNum] == -1
             && $scope.roundNum < $scope.workshopStepsDuration.length - 1){
 
             $ionicPopup.confirm({
@@ -561,6 +572,7 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
                     callback(true);
                 }
             });
+        // No empty iteration
         } else {
             callback(false);
         }
