@@ -2,7 +2,7 @@
 
 var app = angular.module('facilitation');
 
-app.controller('WorkshopListCtrl', function($scope, WorkshopsProvider, $stateParams, $timeout, ionicMaterialInk, ionicMaterialMotion) {
+app.controller('WorkshopListCtrl', function($scope, WorkshopsProvider, $stateParams, $timeout, ionicMaterialInk, ionicMaterialMotion, $ionicPopup) {
     $scope.workshops = {};
 
     console.log(JSON.stringify($scope.currentUser));
@@ -36,6 +36,17 @@ app.controller('WorkshopListCtrl', function($scope, WorkshopsProvider, $statePar
     Number.prototype.padLeft = function(base,chr) {
         var len = (String(base || 10).length - String(this).length) + 1;
         return len > 0 ? new Array(len).join(chr || '0') + this : this;
+    };
+
+    //Display the equipment
+    $scope.showAlert = function(workshop) {
+        if(workshop.equipment) {
+            $ionicPopup.alert({
+                title: 'Vérifiez le matériel',
+                template: workshop.equipment,
+                cssClass: 'materiel'
+            });
+        }
     };
 
 });

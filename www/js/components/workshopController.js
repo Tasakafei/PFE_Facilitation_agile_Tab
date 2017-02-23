@@ -3,7 +3,7 @@
 var app = angular.module('facilitation');
 
 app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $interval, $ionicModal,
-                                        socket, TimerService, WorkshopsProvider) {
+                                        socket, TimerService, WorkshopsProvider, $ionicPopup) {
     $scope.workshop = {};
     $scope.timerIsSync = null;
     $scope.iterationRunning = false;
@@ -160,6 +160,9 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
         }
 
         //Check if the user double the time allowed or if he reduce it too much
+        console.log($scope.workshopStepsDuration[iterationNb]);
+        console.log($scope.workshop.steps[iterationNb].duration.theorical * 60 * 2);
+
         if($scope.workshopStepsDuration[iterationNb] == ($scope.workshop.steps[iterationNb].duration.theorical * 60 * 2) && (value > 0)) {
             $scope.showAlert("Vous avez doublé le temps alloué à cette itération.");
         } else if ($scope.workshopStepsDuration[iterationNb] == ($scope.workshop.steps[iterationNb].duration.theorical * 60 / 2) && (value < 0)) {
