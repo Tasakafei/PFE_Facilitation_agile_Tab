@@ -175,6 +175,15 @@ p.date {
     border-radius: 2px;
 }
 
+.materiel .popup {
+    width: 50%;
+}
+
+.materiel .popup-buttons {
+    width: 50%;
+    margin-left: 25%;
+}
+
 /* #1a242f
 #2c3e50
 */

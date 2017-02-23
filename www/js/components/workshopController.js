@@ -3,7 +3,7 @@
 var app = angular.module('facilitation');
 
 app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $interval, $ionicModal,
-                                        socket, TimerService, WorkshopsProvider, $ionicPlatform) {
+                                        socket, TimerService, WorkshopsProvider, $ionicPopup) {
     $scope.workshop = {};
     $scope.timerIsSync = null;
     $scope.iterationRunning = false;
@@ -162,6 +162,9 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
         }
 
         //Check if the user double the time allowed or if he reduce it too much
+        console.log($scope.workshopStepsDuration[iterationNb]);
+        console.log($scope.workshop.steps[iterationNb].duration.theorical * 60 * 2);
+
         if($scope.workshopStepsDuration[iterationNb] == ($scope.workshop.steps[iterationNb].duration.theorical * 60 * 2) && (value > 0)) {
             $scope.showAlert("Vous avez doublé le temps alloué à cette itération.");
         } else if ($scope.workshopStepsDuration[iterationNb] == ($scope.workshop.steps[iterationNb].duration.theorical * 60 / 2) && (value < 0)) {
@@ -231,17 +234,20 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
                         //Add chevron
                         elem.getElementsByClassName("chevron")[0].style.display = "block";
 
-                        //TODO something wrong here :/
                         //Calcul chevron position
                         var length = $scope.timingArray.length;
-                        var timeTab = $scope.timingArray[length - 1].split(":");
-                        var time = (timeTab[0] * 60 + timeTab[1]) * 60;
+                        var timeTab = $scope.timingArray[length-1].split(":");
+                        var time = (timeTab[0]*60 + timeTab[1]) * 60;
                         var chevronImgHeight = elem.getElementsByClassName("img-chevron")[0].offsetHeight;
 
                         //Add chevron position
-                        var chevronHeight = 100 * ( accumulatorReal - time) / $scope.workshopStepsDuration[i];
-                        elem.getElementsByClassName("img-chevron")[0].style.top =
-                            (elem.offsetHeight - (chevronHeight / 100 * elem.offsetHeight)) - (chevronImgHeight / 2) + "px";
+                        var chevronHeight =  100 * ( accumulatorReal - time) / $scope.workshopStepsDuration[i] ;
+
+                        if(chevronHeight < 0) {
+                            chevronHeight = 0;
+                        }
+
+                        elem.getElementsByClassName("img-chevron")[0].style.top = (elem.offsetHeight - (chevronHeight / 100 * elem.offsetHeight)) - (chevronImgHeight / 2) +"px";
 
                         break;
                     }
