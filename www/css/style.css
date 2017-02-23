@@ -186,6 +186,10 @@ p.date {
     width: 50%;
 }
 
+.materiel .popup-body {
+    font-size: 18px;
+}
+
 .materiel .popup-buttons {
     width: 50%;
     margin-left: 25%;
