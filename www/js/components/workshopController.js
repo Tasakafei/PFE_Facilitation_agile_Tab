@@ -94,7 +94,7 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
                 var theoricalMinutes = [];
                 theoricalMinutes[i] = formatTime($scope.workshopStepsDuration[i]/60 * 60000);
 
-                $scope.workshop.steps[i].duration.theoricalMinutes = theoricalMinutes[i];
+                $scope.workshop.steps[i].duration.practicalMinutesDisplay = theoricalMinutes[i];
             }
         }
 
@@ -188,7 +188,7 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
         }
 
         timeVariationPresentation = timeVariationPresentation.replace(/\s+/g, '');
-        $scope.workshop.steps[iterationNb].duration.theoricalMinutes =
+        $scope.workshop.steps[iterationNb].duration.practicalMinutesDisplay =
             theoricalMinutes[iterationNb] + " " + timeVariationPresentation;
     }
 
@@ -365,7 +365,9 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
         $scope.modal.remove();
         socket.emit('stop_sound', $scope.workshop._id);
         socket.emit('leave_room', $scope.workshop._id);
-        endOfWorkshop();
+        //endOfWorkshop();
+        stopGlobalTimer();
+        stopIterationTimer(false);
     });
 
     /******************************************** TIMERS AND ITERATIONS ***********************************************/
@@ -386,6 +388,7 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
         $scope.isLate = false;
     }
 
+    // End of the workshop, called when the workshop has been fully played
     function endOfWorkshop() {
         $scope.doneWorkshop = true;
         $scope.workshopRunning = false;
@@ -394,6 +397,9 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
         stopGlobalTimer();
         stopIterationTimer(false);
         initializeIterationTimer(0);
+        $scope.workshop.status = "DONE";
+        console.log(JSON.stringify($scope.workshop));
+        //WorkshopsProvider.sendDoneWorkshop($scope.workshop);
     }
 
     // Launch the instance
