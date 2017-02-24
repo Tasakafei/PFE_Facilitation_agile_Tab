@@ -399,7 +399,7 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
     // Launch the instance
     $scope.startIteration = function () {
         if($scope.timerIsSync) {
-            var timerInfo = {"workshop":$scope.workshop._id,"duration":$scope.timeForTimer, "instructionsDescription":$scope.currentStep.description};
+            var timerInfo = {"workshop":$scope.workshop._id,"duration":$scope.timeForTimer, "instructions":$scope.currentStep.instructions};
             socket.emit('launch_timer', timerInfo);
             $scope.startTimer();
             if($scope.workshopRunning == false) {
