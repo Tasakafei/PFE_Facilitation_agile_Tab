@@ -560,13 +560,36 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
             }).then(function (answer) {
                 if(answer == true) {
                     console.log("Wants to add an iteration");
-                    $scope.workshopStepsDuration[$scope.roundNum] = $scope.workshop.steps[$scope.roundNum - 1].duration.theorical * 60;
-                    console.log(JSON.stringify($scope.workshopStepsDuration));
-                    $scope.workshop.steps[$scope.roundNum].title = $scope.workshop.steps[$scope.roundNum - 1].title;
-                    $scope.workshop.steps[$scope.roundNum].description = $scope.workshop.steps[$scope.roundNum - 1].description;
-                    $scope.workshop.steps[$scope.roundNum].duration = $scope.workshop.steps[$scope.roundNum - 1].duration;
-                    $scope.workshop.steps[$scope.roundNum].timing = $scope.workshop.steps[$scope.roundNum - 1].timing;
-                    callback(false);
+                    var validStep = null;
+                    // Search through the previous workshops if there is one which is not empty
+                    for(var i = $scope.roundNum - 1 ; i >= 0 ; i--){
+                        console.log(i);
+                        if($scope.workshop.steps[i].duration.theorical != -1 && $scope.workshop.steps[i].duration.theorical != null){
+                            validStep = $scope.workshop.steps[i];
+                            break;
+                        }
+                    }
+
+                    console.log(JSON.stringify(validStep));
+
+                    // If a non void workshop is found, initialize the new one with it
+                    if(validStep != null){
+                        $scope.workshopStepsDuration[$scope.roundNum] = validStep.duration.theorical * 60;
+                        if($scope.workshop.steps[$scope.roundNum].title == null
+                            || $scope.workshop.steps[$scope.roundNum].title == "")
+                            $scope.workshop.steps[$scope.roundNum].title = validStep.title;
+                        $scope.workshop.steps[$scope.roundNum].description = validStep.description;
+                        $scope.workshop.steps[$scope.roundNum].duration = validStep.duration;
+                        $scope.workshop.steps[$scope.roundNum].timing = validStep.timing;
+                        callback(false);
+
+                    // If no valid workshop found, prompt to the issue to the user and continue
+                    } else {
+                        $scope.showAlert("Tous les ateliers précédents sont vides, impossible de créer une nouvelle " +
+                            "itération. L'atelier va donc continuer.");
+                        callback(true);
+                    }
+
                 } else {
                     console.log("Doesn't want one more iteration");
                     callback(true);
@@ -581,22 +604,23 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
     function nextIteration() {
         $scope.roundNum++;
 
+        //Avoid skipped iterations
+        if ($scope.roundNum < $scope.workshopStepsDuration.length) {
+            while ($scope.workshop.steps[$scope.roundNum].skiped) {
+                $scope.roundNum++;
+
+                //If we are already at the end
+                if ($scope.roundNum == $scope.workshopStepsDuration.length - 1) {
+                    endOfWorkshop();
+                }
+            }
+        }
+
         handleEmptyIteration(function (checkNextEmptyIteration) {
 
             if(checkNextEmptyIteration){
                 nextIteration();
             } else {
-                //Avoid skipped iterations
-                if ($scope.roundNum < $scope.workshopStepsDuration.length) {
-                    while ($scope.workshop.steps[$scope.roundNum].skiped) {
-                        $scope.roundNum++;
-
-                        //If we are already at the end
-                        if ($scope.roundNum == $scope.workshopStepsDuration.length - 1) {
-                            endOfWorkshop();
-                        }
-                    }
-                }
 
                 // Go to the next iteration or ends the workshop
                 if ($scope.roundNum < $scope.workshopStepsDuration.length) {
