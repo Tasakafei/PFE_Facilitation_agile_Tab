@@ -535,45 +535,116 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
         $scope.timerIsSync = true;
     };
 
+    /**
+     * Handles empty iterations. There can be empty iterations which can be "instantiated" by
+     * copying the previous iteration.
+     *
+     * @param callback
+     */
+    function handleEmptyIteration(callback){
+        // When the empty iteration is the end of the workshop, increment the roundNum and continue
+        if($scope.roundNum == $scope.workshopStepsDuration.length - 1) {
+            $scope.roundNum++;
+            callback(false);
+        // Copyable empty iteration, show the popup asking to add or not the new copied iteration
+        } else if($scope.workshopStepsDuration[$scope.roundNum] == -1
+            && $scope.roundNum < $scope.workshopStepsDuration.length - 1){
+
+            $ionicPopup.confirm({
+                title:"Do you want to play an additional iteration ?",
+                template:"This workshop allows you to add a copy of the previous iteration." +
+                "This mean to add " + $scope.workshop.steps[$scope.roundNum - 1].duration.theorical +
+                " minutes to your workshop. Do you want to add it ?",
+                cancelText:"No",
+                okText:"Yes"
+            }).then(function (answer) {
+                if(answer == true) {
+                    console.log("Wants to add an iteration");
+                    var validStep = null;
+                    // Search through the previous workshops if there is one which is not empty
+                    for(var i = $scope.roundNum - 1 ; i >= 0 ; i--){
+                        console.log(i);
+                        if($scope.workshop.steps[i].duration.theorical != -1 && $scope.workshop.steps[i].duration.theorical != null){
+                            validStep = $scope.workshop.steps[i];
+                            break;
+                        }
+                    }
+
+                    console.log(JSON.stringify(validStep));
+
+                    // If a non void workshop is found, initialize the new one with it
+                    if(validStep != null){
+                        $scope.workshopStepsDuration[$scope.roundNum] = validStep.duration.theorical * 60;
+                        if($scope.workshop.steps[$scope.roundNum].title == null
+                            || $scope.workshop.steps[$scope.roundNum].title == "")
+                            $scope.workshop.steps[$scope.roundNum].title = validStep.title;
+                        $scope.workshop.steps[$scope.roundNum].description = validStep.description;
+                        $scope.workshop.steps[$scope.roundNum].duration = validStep.duration;
+                        $scope.workshop.steps[$scope.roundNum].timing = validStep.timing;
+                        callback(false);
+
+                    // If no valid workshop found, prompt to the issue to the user and continue
+                    } else {
+                        $scope.showAlert("Tous les ateliers précédents sont vides, impossible de créer une nouvelle " +
+                            "itération. L'atelier va donc continuer.");
+                        callback(true);
+                    }
+
+                } else {
+                    console.log("Doesn't want one more iteration");
+                    callback(true);
+                }
+            });
+        // No empty iteration
+        } else {
+            callback(false);
+        }
+    }
+
     function nextIteration() {
         $scope.roundNum++;
-        // Avoid empty iterations
-        while ($scope.workshopStepsDuration[$scope.roundNum] == -1
-        && $scope.roundNum < $scope.workshopStepsDuration.length) {
-            $scope.roundNum++;
-        }
 
-        //Avoid skiped iterations
+        //Avoid skipped iterations
         if ($scope.roundNum < $scope.workshopStepsDuration.length) {
             while ($scope.workshop.steps[$scope.roundNum].skiped) {
                 $scope.roundNum++;
 
                 //If we are already at the end
-                if($scope.roundNum == $scope.workshopStepsDuration.length - 1) {
+                if ($scope.roundNum == $scope.workshopStepsDuration.length - 1) {
                     endOfWorkshop();
                 }
             }
         }
 
-        // Go to the next iteration or ends the workshop
-        if($scope.roundNum < $scope.workshopStepsDuration.length){
-            initializeIterationTimer($scope.workshopStepsDuration[$scope.roundNum]);
-            $scope.currentStep = $scope.workshop.steps[$scope.roundNum];
-            if($scope.workshop.steps[$scope.roundNum+1] != undefined) {
+        handleEmptyIteration(function (checkNextEmptyIteration) {
 
-                var i = 1;
-                //Avoid skiped iterations
-                while($scope.workshop.steps[$scope.roundNum+i].skiped) {
-                    i++;
+            if(checkNextEmptyIteration){
+                nextIteration();
+            } else {
+
+                // Go to the next iteration or ends the workshop
+                if ($scope.roundNum < $scope.workshopStepsDuration.length) {
+                    console.log(JSON.stringify($scope.workshopStepsDuration[$scope.roundNum]));
+                    console.log($scope.roundNum + " < " + $scope.workshopStepsDuration.length);
+                    initializeIterationTimer($scope.workshopStepsDuration[$scope.roundNum]);
+                    $scope.currentStep = $scope.workshop.steps[$scope.roundNum];
+                    if ($scope.workshop.steps[$scope.roundNum + 1] != undefined) {
+
+                        var i = 1;
+                        //Avoid skiped iterations
+                        while ($scope.workshop.steps[$scope.roundNum + i].skiped) {
+                            i++;
+                        }
+                        $scope.nextStep = $scope.workshop.steps[$scope.roundNum + i];
+                    }
+                    else
+                        $scope.nextStep = "";
+                    putNextStepMaxHeight();
+                } else {
+                    endOfWorkshop();
                 }
-                $scope.nextStep = $scope.workshop.steps[$scope.roundNum + i];
             }
-            else
-                $scope.nextStep = "";
-            putNextStepMaxHeight();
-        } else {
-            endOfWorkshop();
-        }
+        });
     }
 
     function runGlobalTimer() {
