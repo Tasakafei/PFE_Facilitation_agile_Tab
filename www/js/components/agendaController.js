@@ -2,7 +2,7 @@
 
 var app = angular.module('facilitation');
 
-app.controller('AgendaCtrl', function($scope, WorkshopsProvider) {
+app.controller('AgendaCtrl', function($scope, $state, WorkshopsProvider) {
 
     $scope.workshops = {};
 
@@ -33,6 +33,10 @@ app.controller('AgendaCtrl', function($scope, WorkshopsProvider) {
             }
         });
     });
+
+    $scope.refreshAgenda = function () {
+        $state.go($state.current, {}, {reload: true});
+    };
 
     $scope.makeCalendarClickable = function () {
         var tables = Array.from(document.getElementsByClassName("weekview-normal-event-table"));
