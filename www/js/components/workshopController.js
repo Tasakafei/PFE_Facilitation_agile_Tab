@@ -111,7 +111,6 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
     $scope.updateIterationsTimes = function (iterationNb, value) {
         // If previous iteration selected, do nothing
         if(iterationNb >= $scope.roundNum) {
-            // TODO : Condition to remove in the future to accept empty iterations
             if($scope.workshopStepsDuration[iterationNb] != -1){
                 // Modifying current iteration data
                 if(iterationNb == $scope.roundNum) {
@@ -191,13 +190,6 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
         $scope.workshop.steps[iterationNb].duration.practicalMinutesDisplay =
             theoricalMinutes[iterationNb] + " " + timeVariationPresentation;
     }
-
-    $scope.showAlert = function(content) {
-        $ionicPopup.alert({
-            title: 'Attention !',
-            template: content
-        });
-    };
 
     // Filter the steps to retrieve only the durations
     function filterWorkshopDurationSteps(workshop){
@@ -304,7 +296,6 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
                     $scope.workshop.steps[elem].skiped = true;
                     tmpIterationRunning = $scope.iterationRunning;
                 } else {
-                    console.log($scope.workshop.steps[elem].duration.theorical * 60);
                     $scope.updateIterationsTimes(elem, -$scope.workshopStepsDuration[elem]);
                     $scope.workshop.steps[elem].skiped = true;
 
@@ -374,12 +365,18 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
 
     // Initialize the values for the iteration timer (plugin dependent)
     function initializeIterationTimer(val) {
+        console.log("Before : $scope.timeForTimer  = "+$scope.timeForTimer);
+        console.log("Before : $scope.timer = "+$scope.timer);
         $scope.timeForTimer = val;
         $scope.timer = val;
         $scope.started = false;
         $scope.paused = false;
         $scope.done = false;
-    };
+        if($scope.roundNum < $scope.workshop.steps.length)
+            $scope.workshop.steps[$scope.roundNum].duration.practical = val/60;
+        console.log("After : $scope.timeForTimer  = "+$scope.timeForTimer);
+        console.log("After : $scope.timer = "+$scope.timer);
+    }
 
     // Initialize the value(s) for the global timer
     function initializeGlobalTimer(val) {
@@ -525,7 +522,6 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
                 $scope.iterationRunning = false;
                 $scope.continueToNextIteration = true;
                 media.play();
-                console.log("emit start sound");
                 socket.emit('start_sound', $scope.workshop._id);
                 // Just a fix for the global timer
                 $scope.actualGlobalTimer += 1;
@@ -565,18 +561,14 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
                 okText:"Yes"
             }).then(function (answer) {
                 if(answer == true) {
-                    console.log("Wants to add an iteration");
                     var validStep = null;
                     // Search through the previous workshops if there is one which is not empty
                     for(var i = $scope.roundNum - 1 ; i >= 0 ; i--){
-                        console.log(i);
                         if($scope.workshop.steps[i].duration.theorical != -1 && $scope.workshop.steps[i].duration.theorical != null){
                             validStep = $scope.workshop.steps[i];
                             break;
                         }
                     }
-
-                    console.log(JSON.stringify(validStep));
 
                     // If a non void workshop is found, initialize the new one with it
                     if(validStep != null){
@@ -597,7 +589,6 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
                     }
 
                 } else {
-                    console.log("Doesn't want one more iteration");
                     callback(true);
                 }
             });
@@ -630,8 +621,6 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
 
                 // Go to the next iteration or ends the workshop
                 if ($scope.roundNum < $scope.workshopStepsDuration.length) {
-                    console.log(JSON.stringify($scope.workshopStepsDuration[$scope.roundNum]));
-                    console.log($scope.roundNum + " < " + $scope.workshopStepsDuration.length);
                     initializeIterationTimer($scope.workshopStepsDuration[$scope.roundNum]);
                     $scope.currentStep = $scope.workshop.steps[$scope.roundNum];
                     if ($scope.workshop.steps[$scope.roundNum + 1] != undefined) {
@@ -694,6 +683,12 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
         return formattedTime;
     }
 
+    $scope.showAlert = function(content) {
+        $ionicPopup.alert({
+            title: 'Attention !',
+            template: content
+        });
+    };
 
     //Calc the height of the next step dynamically
     function putNextStepMaxHeight() {

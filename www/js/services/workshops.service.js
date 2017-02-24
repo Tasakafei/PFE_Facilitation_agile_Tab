@@ -97,4 +97,18 @@ app.service('WorkshopsProvider', function ($http) {
             });
         });
     };
+
+    delete $http.defaults.headers.common['X-Requested-With'];
+    this.sendDoneWorkshop = function (doneWorkshop, callback) {
+        $http.get('connection.properties').then(function (response) {
+            host = response.data.serverURL;
+            // TODO : CLEAN DATA BEFORE SENDING IT !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            $http.put(host+'/events/'+doneWorkshop._id, doneWorkshop)
+                .then(function successCallback(data) {
+                    callback(data);
+                },function errorCallback(error) {
+                    callback(error);
+                });
+        });
+    }
 });
