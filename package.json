@@ -2,6 +2,9 @@
   "name": "pfe_tablette_v1",
   "version": "1.1.1",
   "description": "PFE_Tablette_v1: An Ionic project",
+  "scripts": {
+    "postinstall": "./node_modules/bower/bin/bower install"
+  },
   "dependencies": {
     "gulp": "^3.5.6",
     "gulp-concat": "^2.2.0",
