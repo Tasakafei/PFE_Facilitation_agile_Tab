@@ -365,8 +365,6 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
 
     // Initialize the values for the iteration timer (plugin dependent)
     function initializeIterationTimer(val) {
-        console.log("Before : $scope.timeForTimer  = "+$scope.timeForTimer);
-        console.log("Before : $scope.timer = "+$scope.timer);
         $scope.timeForTimer = val;
         $scope.timer = val;
         $scope.started = false;
@@ -374,8 +372,6 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
         $scope.done = false;
         if($scope.roundNum < $scope.workshop.steps.length)
             $scope.workshop.steps[$scope.roundNum].duration.practical = val/60;
-        console.log("After : $scope.timeForTimer  = "+$scope.timeForTimer);
-        console.log("After : $scope.timer = "+$scope.timer);
     }
 
     // Initialize the value(s) for the global timer
@@ -395,8 +391,14 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
         stopIterationTimer(false);
         initializeIterationTimer(0);
         $scope.workshop.status = "DONE";
-        console.log(JSON.stringify($scope.workshop));
-        //WorkshopsProvider.sendDoneWorkshop($scope.workshop);
+
+        // Check if the workshop is just an event or not (an event doesn't have an author)
+        if($scope.workshop.author != null){
+            // Send the done workshop to the server
+            WorkshopsProvider.sendDoneWorkshop($scope.workshop, function (result) {
+                console.log(result.status);
+            });
+        }
     }
 
     // Launch the instance

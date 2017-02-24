@@ -102,8 +102,15 @@ app.service('WorkshopsProvider', function ($http) {
     this.sendDoneWorkshop = function (doneWorkshop, callback) {
         $http.get('connection.properties').then(function (response) {
             host = response.data.serverURL;
-            // TODO : CLEAN DATA BEFORE SENDING IT !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-            $http.put(host+'/events/'+doneWorkshop._id, doneWorkshop)
+
+            // Clean data to match what's expected from the server
+            // TODO (should be controlled, not only cleaned)
+            doneWorkshop.steps.forEach(function (step) {
+                delete step.duration.practicalMinutesDisplay;
+                delete step.skiped;
+            });
+
+            $http.put(host+'/users/instances/'+doneWorkshop._id, doneWorkshop)
                 .then(function successCallback(data) {
                     callback(data);
                 },function errorCallback(error) {
