@@ -17,18 +17,20 @@ app.controller('AgendaCtrl', function($scope, WorkshopsProvider) {
         $scope.workshops = events.data;
 
         events.data.forEach(function (event) {
-            var dateStart = new Date(event.begin_at);
-            var dateEnd = new Date(dateStart);
-            dateEnd.setMinutes(dateStart.getMinutes() + event.duration);
+            if(event.status != "DONE") {
+                var dateStart = new Date(event.begin_at);
+                var dateEnd = new Date(dateStart);
+                dateEnd.setMinutes(dateStart.getMinutes() + event.duration);
 
-            var calendarEvent = {
-                title:event.title,
-                startTime:dateStart,
-                endTime:dateEnd,
-                allDay:false
-            };
+                var calendarEvent = {
+                    title: event.title,
+                    startTime: dateStart,
+                    endTime: dateEnd,
+                    allDay: false
+                };
 
-            $scope.eventSource.push(calendarEvent);
+                $scope.eventSource.push(calendarEvent);
+            }
         });
     });
 

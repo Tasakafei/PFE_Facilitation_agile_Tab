@@ -26,7 +26,9 @@ app.controller('WorkshopListCtrl', function($scope, WorkshopsProvider, $statePar
     });
     WorkshopsProvider.getEventsByDay($stateParams.dayNumber,function (dayEvents) {
         $scope.dayNumber = $stateParams.dayNumber;
-        $scope.workshops = dayEvents;
+        $scope.workshops = dayEvents.filter(function (event) {
+            return event.status != "DONE";
+        });
 
         for (var i = 0; i < $scope.workshops.length; i++) {
             var d = new Date ($scope.workshops[i].begin_at),
