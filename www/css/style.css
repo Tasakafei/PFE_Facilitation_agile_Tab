@@ -400,3 +400,15 @@ div#table .button {
     }
 }
 
+/* calendar */
+
+#refreshButton {
+    margin-top: 4px;
+    margin-right: 4px;
+}
+
+#refreshButton .ion-refresh:before {
+    position: relative;
+    top: 3px;
+    left: -4px;
+}
