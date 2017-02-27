@@ -9,6 +9,9 @@ app.service('WorkshopsProvider', function ($http) {
 
     var host;
 
+    /**
+     * Retrieves all instances
+     */
     delete $http.defaults.headers.common['X-Requested-With'];
     this.getWorkshops = function (callback) {
         $http.get('connection.properties').then(function (response) {
@@ -31,6 +34,9 @@ app.service('WorkshopsProvider', function ($http) {
 
     };
 
+    /**
+     * Retrieves the workshop by id
+     */
     delete $http.defaults.headers.common['X-Requested-With'];
     this.getWorkshopById = function(idWorkshop, callback){
         $http.get('connection.properties').then(function (response) {
@@ -51,6 +57,9 @@ app.service('WorkshopsProvider', function ($http) {
         });
     };
 
+    /**
+     * Retrieves all the events
+     */
     delete $http.defaults.headers.common['X-Requested-With'];
     this.getEvents = function(callback){
         $http.get('connection.properties').then(function (response) {
@@ -70,6 +79,9 @@ app.service('WorkshopsProvider', function ($http) {
         });
     };
 
+    /**
+     * Retrieves all the events then filtered by day (0-6)
+     */
     delete $http.defaults.headers.common['X-Requested-With'];
     this.getEventsByDay = function(dayNumber, callback){
         $http.get('connection.properties').then(function (response) {
@@ -98,6 +110,9 @@ app.service('WorkshopsProvider', function ($http) {
         });
     };
 
+    /**
+     * Sends a done workshop to the server
+     */
     delete $http.defaults.headers.common['X-Requested-With'];
     this.sendDoneWorkshop = function (doneWorkshop, callback) {
         $http.get('connection.properties').then(function (response) {
