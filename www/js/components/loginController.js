@@ -8,14 +8,6 @@ app.controller('LoginCtrl', function($scope, $state, Auth) {
     $scope.profile = {};
     $scope.user = {};
 
-    $scope.fakeLogIn = function () {
-        if($scope.user.login != undefined && $scope.user.password != undefined){
-            Auth.fakeLogin($scope.user, function () {
-                $state.go('tab.agenda');
-            });
-        }
-    };
-
     $scope.logIn = function() {
         Auth.login('password', {
                 'email': $scope.user.email,
