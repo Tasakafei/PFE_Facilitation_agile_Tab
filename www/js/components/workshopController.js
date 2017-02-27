@@ -34,15 +34,17 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
     var media;
 
     // Initialize the media which plays the alarm sound, used to develop using as well ionic serve as ionic run [platform]
-    function initMediaAudio() {
+    function initDeviceVariables() {
         if(isServe){
             if(media == undefined) media = new Audio("../../"+alarmUrl)
+            $scope.filesUrl = "../..";
         } else {
             if(media == undefined) media = new Media("/android_asset/www/"+alarmUrl);
+            $scope.filesUrl = "/android_asset/www";
         }
     }
     // Calling the init media function
-    initMediaAudio();
+    initDeviceVariables();
 
     // Automatically retrieve the workshop instance when arriving in this controller
     WorkshopsProvider.getEventsByDay($stateParams.dayNumber,function (eventsResult) {
