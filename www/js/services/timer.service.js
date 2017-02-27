@@ -1,6 +1,9 @@
 var app = angular.module('facilitation');
 
 app.service('TimerService', function ($rootScope, $timeout, $interval) {
+
+    // TODO : This service should handle the timers (instead of the huge workshopController)
+
     /*$rootScope.mytimeout = null;
 
     // initialize the timer for time value and workshop id (for socket.io)
