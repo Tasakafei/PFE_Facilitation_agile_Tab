@@ -4,6 +4,9 @@ var app = angular.module('facilitation');
 
 app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $interval, $ionicModal,
                                         socket, TimerService, WorkshopsProvider, $ionicPopup) {
+
+    // TODO : This controller is way too big
+
     $scope.workshop = {};
     $scope.timerIsSync = null;
     $scope.iterationRunning = false;
@@ -33,7 +36,8 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
     var alarmUrl = "sound/ALARM-DANGER-WARNING_Sound_Effect.mp3";
     var media;
 
-    // Initialize the media which plays the alarm sound, used to develop using as well ionic serve as ionic run [platform]
+    // Initialize the variables according to the device
+    // TODO : used for DEV, works only with ANDROID
     function initDeviceVariables() {
         if(isServe){
             if(media == undefined) media = new Audio("../../"+alarmUrl)
@@ -201,76 +205,6 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
         });
     };
 
-    function moveChevron() {
-        //We are late
-        if($scope.actualGlobalTimer > $scope.theoreticalGlobalTimer) {
-
-            var accumulatorReal = 0;
-            for (var i = 0; i < $scope.workshop.steps.length; i++) {
-
-                //Real time steps accumulation
-                if($scope.workshopStepsDuration[i] != undefined)
-                    accumulatorReal += $scope.workshopStepsDuration[i];
-
-                if( accumulatorReal > $scope.theoreticalGlobalTimer ) {
-                    var modalActive = document.getElementsByClassName("modal-backdrop active")[0];
-                    // If the modal IS opened (if closed, issue can happen where deactivated modal is selected)
-                    if(modalActive != undefined) {
-                        var elem = modalActive.getElementsByClassName("step-" + (i))[0];
-
-                        //Clean other chevron
-                        for (var y = 0; y < document.getElementsByClassName("chevron").length; y++) {
-                            document.getElementsByClassName("chevron")[y].style.display = "none";
-                        }
-
-                        //Add chevron
-                        elem.getElementsByClassName("chevron")[0].style.display = "block";
-
-                        //Calcul chevron position
-                        var length = $scope.timingArray.length;
-                        var timeTab = $scope.timingArray[length-1].split(":");
-                        var time = (timeTab[0]*60 + timeTab[1]) * 60;
-                        var chevronImgHeight = elem.getElementsByClassName("img-chevron")[0].offsetHeight;
-
-                        //Add chevron position
-                        var chevronHeight =  100 * ( accumulatorReal - time) / $scope.workshopStepsDuration[i] ;
-
-                        if(chevronHeight < 0) {
-                            chevronHeight = 0;
-                        }
-
-                        elem.getElementsByClassName("img-chevron")[0].style.top = (elem.offsetHeight - (chevronHeight / 100 * elem.offsetHeight)) - (chevronImgHeight / 2) +"px";
-
-                        break;
-                    }
-                }
-            }
-        } //We are in time
-        else  {
-
-            var modalActive = document.getElementsByClassName("modal-backdrop active")[0];
-            // If the modal IS opened (if closed, issue can happen where deactivated modal is selected)
-            if(modalActive != undefined) {
-                //Clean other chevron
-                for (var y = 0; y < document.getElementsByClassName("chevron").length; y++) {
-                    document.getElementsByClassName("chevron")[y].style.display = "none";
-                }
-
-                //Add chevron at the end
-                var elem = modalActive.getElementsByClassName("step-" + ($scope.workshop.steps.length - 1))[0];
-                elem.getElementsByClassName("chevron")[0].style.display = "block";
-            }
-        }
-    }
-
-    /*********************************************** TIMER SYNC *******************************************************/
-
-    // Used to join the wanted instance
-    $scope.synchronizeTimer = function(){
-        console.log("Join room : "+$scope.workshop._id);
-        socket.emit('join_room', $scope.workshop._id);
-    };
-
     //Delete an iteration on swipe
     var tmpCurrentTime;
     var tmpIterationRunning;
@@ -344,6 +278,14 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
         }
     };
 
+    /*********************************************** TIMER SYNC *******************************************************/
+
+    // Used to join the wanted instance
+    $scope.synchronizeTimer = function(){
+        console.log("Join room : "+$scope.workshop._id);
+        socket.emit('join_room', $scope.workshop._id);
+    };
+
     // Ensure that the timer is synchronized
     socket.on('join_success', function(msg){
         $scope.timerIsSync = true;
@@ -358,7 +300,6 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
         $scope.modal.remove();
         socket.emit('stop_sound', $scope.workshop._id);
         socket.emit('leave_room', $scope.workshop._id);
-        //endOfWorkshop();
         stopGlobalTimer();
         stopIterationTimer(false);
     });
@@ -367,11 +308,14 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
 
     // Initialize the values for the iteration timer (plugin dependent)
     function initializeIterationTimer(val) {
+        // Variable used to know the latest duration set to the timer
         $scope.timeForTimer = val;
+        // The actual iteration timer
         $scope.timer = val;
+        // Used to know if the timer is running
         $scope.started = false;
+        // Used to know if the timer is paused
         $scope.paused = false;
-        $scope.done = false;
         if($scope.roundNum < $scope.workshop.steps.length)
             $scope.workshop.steps[$scope.roundNum].duration.practical = val/60;
     }
@@ -381,26 +325,6 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
         $scope.theoreticalGlobalTimer = val;
         $scope.actualGlobalTimer = val;
         $scope.isLate = false;
-    }
-
-    // End of the workshop, called when the workshop has been fully played
-    function endOfWorkshop() {
-        $scope.doneWorkshop = true;
-        $scope.workshopRunning = false;
-        $scope.iterationRunning = false;
-        $scope.roundNum = 0;
-        stopGlobalTimer();
-        stopIterationTimer(false);
-        initializeIterationTimer(0);
-        $scope.workshop.status = "DONE";
-
-        // Check if the workshop is just an event or not (an event doesn't have an author)
-        if($scope.workshop.author != null){
-            // Send the done workshop to the server
-            WorkshopsProvider.sendDoneWorkshop($scope.workshop, function (result) {
-                console.log(result.status);
-            });
-        }
     }
 
     // Launch the instance
@@ -445,71 +369,13 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
         $scope.timer = $scope.timeForTimer;
         $scope.started = false;
         $scope.paused = false;
-        $scope.done = false;
     };
 
-    /**
-     * Increase the timers according to the amount in parameters
-     * Used for the +30 button
-     * Stops and rerun the timers to stay synchronized so must be used when the timers are running
-     * TODO : Change the bad names of theses 4 methods
-     * @param amount
-     */
-    $scope.increaseTimer = function (amount) {
-        stopIterationTimer(false);
-        handleTimersIncrease(amount);
-        var timerInfo = {"workshop":$scope.workshop._id,"duration":$scope.timeForTimer};
-        socket.emit('restart_timer', timerInfo);
-        runIterationTimer();
-    };
-
-    /**
-     * Increase the timers according to the amount in parameters without synchronizing
-     * TODO : Change the bad names of theses 4 methods
-     * @param amount
-     */
-    function handleTimersIncrease(amount){
-        $scope.timer += amount;
-        $scope.actualGlobalTimer += amount;
-        $scope.timeForTimer = $scope.timer;
-        updateTimersInConductor($scope.roundNum, amount);
-    }
-
-    /**
-     * Decrease the timers according to the amount in parameters
-     * Used for the -30 button
-     * Stops and rerun the timers to stay synchronized so must be used when the timers are running
-     * TODO : Change the bad names of theses 4 methods
-     * @param amount
-     */
-    $scope.decreaseTimer = function (amount) {
-        stopIterationTimer(false);
-        handleTimersDecrease(amount);
-        var timerInfo = {"workshop":$scope.workshop._id,"duration":$scope.timeForTimer};
-        socket.emit('restart_timer', timerInfo);
-        runIterationTimer();
-    };
-
-    /**
-     * Decrease the timers according to the amount in parameters without synchronizing
-     * TODO : Change the bad names of theses 4 methods
-     * @param amount
-     */
-    function handleTimersDecrease(amount){
-        $scope.actualGlobalTimer -= $scope.timer;
-        var timerVal = $scope.timer - amount;
-        if(timerVal < 0) timerVal = 0;
-        $scope.timer = timerVal;
-        $scope.actualGlobalTimer += $scope.timer;
-        $scope.timeForTimer = $scope.timer;
-        updateTimersInConductor($scope.roundNum, -(amount));
-    }
-
+    // Actual function that runs the timer (and the actual global timer)
     function runIterationTimer(){
         timerInterval = $interval(function(){
             $scope.timer--;
             $scope.actualGlobalTimer--;
-            // TODO : Check if that fix is not totally shitty
             if($scope.timer == -1) {
                 $scope.timer = 0;
                 stopIterationTimer(true);
@@ -533,13 +399,82 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
         }
     };
 
-    $scope.stopSound = function() {
-        media.pause();
-        socket.emit('stop_sound', $scope.workshop._id);
-        nextIteration();
-        $scope.continueToNextIteration = false;
-        $scope.timerIsSync = true;
+    function runGlobalTimer() {
+        globalTimerInterval = $interval(function(){
+            if($scope.isLate){
+                $scope.theoreticalGlobalTimer++;
+            } else {
+                $scope.theoreticalGlobalTimer--;
+                if($scope.theoreticalGlobalTimer == -1) {
+                    $scope.isLate = true;
+                    $scope.theoreticalGlobalTimer = 1;
+                }
+            }
+            //Check if we need to move the chevron
+            moveChevron();
+
+        }, 1000);
+    }
+
+    function stopGlobalTimer() {
+        if (angular.isDefined(globalTimerInterval)) {
+            $interval.cancel(globalTimerInterval);
+            globalTimerInterval = undefined;
+        }
+    }
+
+    /**
+     * Increase the timers according to the amount in parameters
+     * Used for the +30 button
+     * Stops and rerun the timers to stay synchronized so must be used when the timers are running
+     * @param amount
+     */
+    $scope.increaseTimer = function (amount) {
+        stopIterationTimer(false);
+        handleTimersIncrease(amount);
+        var timerInfo = {"workshop":$scope.workshop._id,"duration":$scope.timeForTimer};
+        socket.emit('restart_timer', timerInfo);
+        runIterationTimer();
     };
+
+    /**
+     * Increase the timers according to the amount in parameters without synchronizing
+     * @param amount
+     */
+    function handleTimersIncrease(amount){
+        $scope.timer += amount;
+        $scope.actualGlobalTimer += amount;
+        $scope.timeForTimer = $scope.timer;
+        updateTimersInConductor($scope.roundNum, amount);
+    }
+
+    /**
+     * Decrease the timers according to the amount in parameters
+     * Used for the -30 button
+     * Stops and rerun the timers to stay synchronized so must be used when the timers are running
+     * @param amount
+     */
+    $scope.decreaseTimer = function (amount) {
+        stopIterationTimer(false);
+        handleTimersDecrease(amount);
+        var timerInfo = {"workshop":$scope.workshop._id,"duration":$scope.timeForTimer};
+        socket.emit('restart_timer', timerInfo);
+        runIterationTimer();
+    };
+
+    /**
+     * Decrease the timers according to the amount in parameters without synchronizing
+     * @param amount
+     */
+    function handleTimersDecrease(amount){
+        $scope.actualGlobalTimer -= $scope.timer;
+        var timerVal = $scope.timer - amount;
+        if(timerVal < 0) timerVal = 0;
+        $scope.timer = timerVal;
+        $scope.actualGlobalTimer += $scope.timer;
+        $scope.timeForTimer = $scope.timer;
+        updateTimersInConductor($scope.roundNum, -(amount));
+    }
 
     /**
      * Handles empty iterations. There can be empty iterations which can be "instantiated" by
@@ -604,12 +539,10 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
 
     function nextIteration() {
         $scope.roundNum++;
-
         //Avoid skipped iterations
         if ($scope.roundNum < $scope.workshopStepsDuration.length) {
             while ($scope.workshop.steps[$scope.roundNum].skiped) {
                 $scope.roundNum++;
-
                 //If we are already at the end
                 if ($scope.roundNum == $scope.workshopStepsDuration.length - 1) {
                     endOfWorkshop();
@@ -618,11 +551,9 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
         }
 
         handleEmptyIteration(function (checkNextEmptyIteration) {
-
             if(checkNextEmptyIteration){
                 nextIteration();
             } else {
-
                 // Go to the next iteration or ends the workshop
                 if ($scope.roundNum < $scope.workshopStepsDuration.length) {
                     initializeIterationTimer($scope.workshopStepsDuration[$scope.roundNum]);
@@ -646,28 +577,31 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
         });
     }
 
-    function runGlobalTimer() {
-        globalTimerInterval = $interval(function(){
-            if($scope.isLate){
-                $scope.theoreticalGlobalTimer++;
-            } else {
-                $scope.theoreticalGlobalTimer--;
-                if($scope.theoreticalGlobalTimer == -1) {
-                    $scope.isLate = true;
-                    $scope.theoreticalGlobalTimer = 1;
-                }
-            }
+    $scope.stopSound = function() {
+        media.pause();
+        socket.emit('stop_sound', $scope.workshop._id);
+        nextIteration();
+        $scope.continueToNextIteration = false;
+        $scope.timerIsSync = true;
+    };
 
-            //Check if we need to move the chevron
-            moveChevron();
+    // End of the workshop, called when the workshop has been fully played
+    function endOfWorkshop() {
+        $scope.doneWorkshop = true;
+        $scope.workshopRunning = false;
+        $scope.iterationRunning = false;
+        $scope.roundNum = 0;
+        stopGlobalTimer();
+        stopIterationTimer(false);
+        initializeIterationTimer(0);
+        $scope.workshop.status = "DONE";
 
-        }, 1000);
-    }
-
-    function stopGlobalTimer() {
-        if (angular.isDefined(globalTimerInterval)) {
-            $interval.cancel(globalTimerInterval);
-            globalTimerInterval = undefined;
+        // Check if the workshop is just an event or not (an event doesn't have an author)
+        if($scope.workshop.author != null){
+            // Send the done workshop to the server
+            WorkshopsProvider.sendDoneWorkshop($scope.workshop, function (result) {
+                console.log(result.status);
+            });
         }
     }
 
@@ -693,6 +627,69 @@ app.controller('WorkshopCtrl', function($scope, $stateParams, $ionicLoading, $in
             template: content
         });
     };
+
+    // Function used to move the "chevron" in the conductor
+    function moveChevron() {
+        //We are late
+        if($scope.actualGlobalTimer > $scope.theoreticalGlobalTimer) {
+
+            var accumulatorReal = 0;
+            for (var i = 0; i < $scope.workshop.steps.length; i++) {
+
+                //Real time steps accumulation
+                if($scope.workshopStepsDuration[i] != undefined)
+                    accumulatorReal += $scope.workshopStepsDuration[i];
+
+                if( accumulatorReal > $scope.theoreticalGlobalTimer ) {
+                    var modalActive = document.getElementsByClassName("modal-backdrop active")[0];
+                    // If the modal IS opened (if closed, issue can happen where deactivated modal is selected)
+                    if(modalActive != undefined) {
+                        var elem = modalActive.getElementsByClassName("step-" + (i))[0];
+
+                        //Clean other chevron
+                        for (var y = 0; y < document.getElementsByClassName("chevron").length; y++) {
+                            document.getElementsByClassName("chevron")[y].style.display = "none";
+                        }
+
+                        //Add chevron
+                        elem.getElementsByClassName("chevron")[0].style.display = "block";
+
+                        //Calcul chevron position
+                        var length = $scope.timingArray.length;
+                        var timeTab = $scope.timingArray[length-1].split(":");
+                        var time = (timeTab[0]*60 + timeTab[1]) * 60;
+                        var chevronImgHeight = elem.getElementsByClassName("img-chevron")[0].offsetHeight;
+
+                        //Add chevron position
+                        var chevronHeight =  100 * ( accumulatorReal - time) / $scope.workshopStepsDuration[i] ;
+
+                        if(chevronHeight < 0) {
+                            chevronHeight = 0;
+                        }
+
+                        elem.getElementsByClassName("img-chevron")[0].style.top = (elem.offsetHeight - (chevronHeight / 100 * elem.offsetHeight)) - (chevronImgHeight / 2) +"px";
+
+                        break;
+                    }
+                }
+            }
+        } //We are in time
+        else  {
+
+            var modalActive = document.getElementsByClassName("modal-backdrop active")[0];
+            // If the modal IS opened (if closed, issue can happen where deactivated modal is selected)
+            if(modalActive != undefined) {
+                //Clean other chevron
+                for (var y = 0; y < document.getElementsByClassName("chevron").length; y++) {
+                    document.getElementsByClassName("chevron")[y].style.display = "none";
+                }
+
+                //Add chevron at the end
+                var elem = modalActive.getElementsByClassName("step-" + ($scope.workshop.steps.length - 1))[0];
+                elem.getElementsByClassName("chevron")[0].style.display = "block";
+            }
+        }
+    }
 
     //Calc the height of the next step dynamically
     function putNextStepMaxHeight() {
