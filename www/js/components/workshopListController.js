@@ -18,6 +18,21 @@ app.controller('WorkshopListCtrl', function($scope, WorkshopsProvider, $statePar
     // Activate ink for controller
     ionicMaterialInk.displayEffect();
 
+    var isServe = (!(ionic.Platform.isAndroid() || ionic.Platform.isIOS() || ionic.Platform.isWindowsPhone()));
+    var filesUrl;
+
+    // Initialize the variables according to the device
+    // TODO : used for DEV, works only with ANDROID
+    function initDeviceVariables() {
+        if(isServe){
+            filesUrl = "../..";
+        } else {
+            filesUrl = "/android_asset/www";
+        }
+    }
+    // Calling the init media function
+    initDeviceVariables();
+
     ionicMaterialMotion.pushDown({
         selector: '.push-down'
     });
@@ -36,7 +51,7 @@ app.controller('WorkshopListCtrl', function($scope, WorkshopsProvider, $statePar
 
             $scope.workshops[i].dateAndTime = dformat;
             if(typeof $scope.workshops[i].photo == 'undefined') {
-                $scope.workshops[i].photo = "/android_asset/www/img/default.jpg";
+                $scope.workshops[i].photo = filesUrl+"/img/default.jpg"; //ICI
             }
         }
     });
